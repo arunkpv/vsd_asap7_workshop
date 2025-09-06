@@ -22,22 +22,20 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 #### 1.3.4 - Device Scaling And Electrical Characteristics
 #### 1.3.5 - 3D-Structures
 ### 1.4 - BEOL Innovations
+_________________________________________________________________________________________________________  
 
 ## 2 - Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis
 ### 2.1 - NFET Characteristics Using 7nm PDKs
 ### 2.2 - Inverter Characteristics Using 7nm FinFETs
 ### 2.3 - Module 2 Assignment - 7nm Inverter Characterization
+_________________________________________________________________________________________________________  
 
 ## 3 - Design of a BandGap Reference Circuit
 ### 3.1 - Theory: Design of a BGR Circuit
 ### 3.2 - Module 3 Assignent - Bandgap Reference Design and Simulation using Xschem
+_________________________________________________________________________________________________________  
 
-
-<details>
-<summary>  Acknowledgements </summary>
-<br>
-
- - Kunal Ghosh Co-founder VSD Coporation Private Limited
-   
+## Acknowledgements
+ - Kunal Ghosh (VSD Corp. Pvt. Ltd.)
  - Soundarya Madhuri Royyuru (https://github.com/RSMadhuri66/Bandgap-Reference-Circuit-with-SCMB-with-ASAP-7nm-PDK-)
 
