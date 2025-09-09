@@ -26,6 +26,7 @@ ________________________________________________________________________________
 
 ## 2 - Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis
 ### 2.1 - NFET Characteristics Using 7nm PDKs
+
 ### 2.2 - Inverter Characteristics Using 7nm FinFETs
 ### 2.3 - Module 2 Assignment - 7nm Inverter Characterization
 _________________________________________________________________________________________________________  
