@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ASAP7 CMOS Inverter Characterization</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="cmos_inv_shmoo_data2.js"></script>
+  <style>
+    body { font-family: sans-serif; margin-right: 250px; }
+    #controls { margin-bottom: 1em; }
+    .dropdown { position: relative; display: inline-block; margin-left: 20px; }
+    .dropdown-button { padding: 6px 12px; border: 1px solid #aaa; background: #f0f0f0; cursor: pointer; }
+    .dropdown-content { display: none; position: absolute; background-color: white; border: 1px solid #ccc;
+                        padding: 10px; z-index: 1; max-height: 200px; overflow-y: auto; min-width: 200px; }
+    .dropdown-content label { display: block; margin: 5px 0; }
+    .dropdown.show .dropdown-content { display: block; }
+    #slider-container { margin-top: 1em; }
+    #legend-container {
+      position: fixed;
+      top: 100px;
+      right: 10px;
+      width: 220px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 80vh;
+      box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
+      font-size: 14px;
+    }
+    #legend-container ul { padding-left: 0; margin: 6px 0; list-style: none; }
+    #legend-container li { margin: 5px 0; display: flex; align-items: center; cursor: pointer; }
+    #legend-container li.inactive { opacity: 0.5; }
+    .legend-color-box {
+      width: 14px; height: 14px;
+      margin-right: 6px;
+      border: 1px solid #000;
+    }
+    #toggle-all {
+      margin-bottom: 8px;
+      padding: 5px 10px;
+      border: 1px solid #aaa;
+      background: #f7f7f7;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>ASAP7 CMOS Inverter Characterization (tt_27c)</h2>
+
+  <div id="controls">
+    <div class="dropdown" id="measurement-dropdown">
+      <div class="dropdown-button">Select Measurements</div>
+      <div class="dropdown-content" id="measurement-checkboxes"></div>
+    </div>
+
+    <div class="dropdown" id="dropdown-container">
+      <div class="dropdown-button">Select Nfin_P</div>
+      <div class="dropdown-content" id="dropdown-checkboxes"></div>
+    </div>
+
+    <div id="slider-container">
+      <label>Wp/Wn Range:</label><br>
+      <input type="range" id="ratio-min" min="0" max="3" step="0.01" value="0">
+      <input type="range" id="ratio-max" min="0" max="3" step="0.01" value="3">
+      <div>
+        <span>Min: <span id="min-display">0</span></span>
+        <span style="margin-left: 40px;">Max: <span id="max-display">3</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="plot" style="width: 100%;"></div>
+  <div id="legend-container">
+    <button id="toggle-all">Hide All</button>
+    <b>Legend</b>
+    <div id="legend-list"></div>
+  </div>
+
+  <script>
+    const measurementBox = document.getElementById('measurement-checkboxes');
+    const dropdownContainer = document.getElementById('dropdown-container');
+    const dropdownButton = dropdownContainer.querySelector('.dropdown-button');
+    const checkboxList = document.getElementById('dropdown-checkboxes');
+    const ratioMinSlider = document.getElementById('ratio-min');
+    const ratioMaxSlider = document.getElementById('ratio-max');
+    const minDisplay = document.getElementById('min-display');
+    const maxDisplay = document.getElementById('max-display');
+    const legendList = document.getElementById('legend-list');
+    const toggleAllBtn = document.getElementById('toggle-all');
+
+    let currentTraces = [];
+    let allVisible = true;
+    let traceVisibility = {};
+
+    // 🔹 NEW: SI Unit Formatter
+    function formatSI(value) {
+      if (value === 0) return "0";
+      const units = [
+        { factor: 1e-12, suffix: "p" },
+        { factor: 1e-9,  suffix: "n" },
+        { factor: 1e-6,  suffix: "µ" },
+        { factor: 1e-3,  suffix: "m" },
+        { factor: 1,     suffix: ""  },
+        { factor: 1e3,   suffix: "k" },
+        { factor: 1e6,   suffix: "M" },
+        { factor: 1e9,   suffix: "G" }
+      ];
+      const absVal = Math.abs(value);
+      for (let i = 0; i < units.length; i++) {
+        if (absVal < units[i].factor * 1000) {
+          return (value / units[i].factor).toFixed(3).replace(/\.?0+$/,"") + " " + units[i].suffix;
+        }
+      }
+      return value.toExponential(3);
+    }
+
+    function createMeasurementCheckboxes() {
+      measurementBox.innerHTML = '';
+      measurements.forEach(m => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = (m === measurements[0]);
+        checkbox.value = m;
+        checkbox.addEventListener('change', updatePlot);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(m));
+        measurementBox.appendChild(label);
+      });
+    }
+
+    function getSelectedMeasurements() {
+      return Array.from(measurementBox.querySelectorAll('input[type=checkbox]:checked'))
+                  .map(cb => cb.value);
+    }
+
+    const uniqueKeys = Object.keys(shmooData);
+
+    function createDropdownCheckboxes(keys, onChange) {
+      checkboxList.innerHTML = '';
+      keys.forEach(key => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        checkbox.value = key;
+        checkbox.addEventListener('change', onChange);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(`${shmooVar1}=${key}`));
+        checkboxList.appendChild(label);
+      });
+    }
+
+    function getSelectedKeys() {
+      return Array.from(checkboxList.querySelectorAll('input[type=checkbox]:checked'))
+                  .map(cb => cb.value);
+    }
+
+    function plotMeasurements(measurements, enabledKeys = null) {
+      const subplots = [];
+      let rows = Math.ceil(measurements.length / 2);
+      let cols = (measurements.length === 1) ? 1 : 2;
+
+      const layout = {
+        grid: { rows: rows, columns: cols, pattern: 'independent' },
+        hovermode: 'closest',
+        title: 'Nfins_(P,N) Shmoo Plots',
+        showlegend: false,
+        margin: { r: 20 }
+      };
+
+      layout.height = rows * 400;
+
+      const minRatio = parseFloat(ratioMinSlider.value);
+      const maxRatio = parseFloat(ratioMaxSlider.value);
+
+      const legendMap = new Map();
+      const colorPalette = Plotly.d3.scale.category10();
+
+      measurements.forEach((measurement, i) => {
+        const axisSuffix = (i + 1);
+
+        Object.entries(shmooData).forEach(([groupKey, arr]) => {
+          if (enabledKeys && !enabledKeys.includes(groupKey)) return;
+          const filtered = arr.filter(d => {
+            const ratio = parseFloat(groupKey) / parseFloat(d.x);
+            return ratio >= minRatio && ratio <= maxRatio;
+          });
+          if (filtered.length === 0) return;
+
+          filtered.sort((a, b) => a.x - b.x);
+          const xVals = filtered.map(d => d.x);
+          const yVals = filtered.map(d => d[measurement]);
+
+          // 🔹 Use SI formatting here
+          const text = filtered.map(d => {
+            const ratio = (parseFloat(groupKey) / d.x).toFixed(3);
+            const formattedVal = formatSI(d[measurement]);
+            return `${shmooVar1}=${groupKey}<br>` +
+                   `${shmooVar2}=${d.x}<br>` +
+                   `${measurement}=${formattedVal}<br>` +
+                   `Wp/Wn=${ratio}`;
+          });
+
+          const traceColor = colorPalette(groupKey);
+
+          subplots.push({
+            x: xVals,
+            y: yVals,
+            mode: 'lines+markers',
+            type: 'scatter',
+            name: `${shmooVar1}=${groupKey}`,
+            marker: { size: 6, color: traceColor },
+            line: { shape: 'linear', color: traceColor },
+            text: text,
+            hoverinfo: 'text',
+            xaxis: 'x' + axisSuffix,
+            yaxis: 'y' + axisSuffix,
+            legendgroup: groupKey
+          });
+
+          if (!legendMap.has(groupKey)) {
+            legendMap.set(groupKey, traceColor);
+            traceVisibility[groupKey] = true;
+          }
+        });
+
+        layout['xaxis' + axisSuffix] = { title: shmooVar2, dtick: 1 };
+        layout['yaxis' + axisSuffix] = { title: measurement };
+      });
+
+      Plotly.newPlot('plot', subplots, layout).then(gd => {
+        currentTraces = subplots;
+      });
+
+      // Legend UI
+      legendList.innerHTML = '';
+      const ul = document.createElement('ul');
+      legendMap.forEach((color, key) => {
+        const li = document.createElement('li');
+        const colorBox = document.createElement('span');
+        colorBox.className = 'legend-color-box';
+        colorBox.style.backgroundColor = color;
+        li.appendChild(colorBox);
+        li.appendChild(document.createTextNode(`${shmooVar1}=${key}`));
+
+        li.addEventListener('click', () => {
+          traceVisibility[key] = !traceVisibility[key];
+          const update = { visible: traceVisibility[key] ? true : 'legendonly' };
+          const indices = currentTraces
+            .map((t, i) => (t.legendgroup === key ? i : null))
+            .filter(i => i !== null);
+          Plotly.restyle('plot', update, indices);
+          li.classList.toggle('inactive', !traceVisibility[key]);
+        });
+
+        ul.appendChild(li);
+      });
+      legendList.appendChild(ul);
+    }
+
+    function updatePlot() {
+      minDisplay.textContent = ratioMinSlider.value;
+      maxDisplay.textContent = ratioMaxSlider.value;
+      const selectedMeasurements = getSelectedMeasurements();
+      plotMeasurements(selectedMeasurements, getSelectedKeys());
+    }
+
+    toggleAllBtn.addEventListener('click', () => {
+      allVisible = !allVisible;
+      const update = { visible: allVisible ? true : 'legendonly' };
+      Plotly.restyle('plot', update);
+      toggleAllBtn.textContent = allVisible ? 'Hide All' : 'Show All';
+      Object.keys(traceVisibility).forEach(k => traceVisibility[k] = allVisible);
+      legendList.querySelectorAll('li').forEach(li =>
+        li.classList.toggle('inactive', !allVisible)
+      );
+    });
+
+    createMeasurementCheckboxes();
+    createDropdownCheckboxes(uniqueKeys, updatePlot);
+    ratioMinSlider.addEventListener('input', updatePlot);
+    ratioMaxSlider.addEventListener('input', updatePlot);
+    updatePlot();
+
+    dropdownButton.addEventListener('click', () => {
+      dropdownContainer.classList.toggle('show');
+    });
+    document.addEventListener('click', function(event) {
+      if (!dropdownContainer.contains(event.target) &&
+          !document.getElementById('measurement-dropdown').contains(event.target)) {
+        dropdownContainer.classList.remove('show');
+        document.getElementById('measurement-dropdown').classList.remove('show');
+      }
+    });
+    document.getElementById('measurement-dropdown').querySelector('.dropdown-button')
+      .addEventListener('click', () => {
+        document.getElementById('measurement-dropdown').classList.toggle('show');
+      });
+  </script>
+</body>
+</html>
