@@ -35,8 +35,9 @@ ________________________________________________________________________________
 #### 2.2.2 - 
 
 #### 2.2.3 - CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
-  - ![Characterization Table (PDF)](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
-  - Click on the image below to view graphs from the characterization data.
+  - [Characterization Table PDF](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
+  - Click on the image below to view graphs from the characterization data.  
+
   |[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)|
   |:---:|
 
