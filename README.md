@@ -25,13 +25,22 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 _________________________________________________________________________________________________________  
 
 ## 2 - Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis
+
 ### 2.1 - NFET Characteristics Using 7nm PDKs
 
-### 2.2 - Inverter Characteristics Using 7nm FinFETs
-Click on the image below to view graphs from the characterization data.
-[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)
+### 2.2 - Module 2 Assignment - 7nm Inverter Characterization
 
-### 2.3 - Module 2 Assignment - 7nm Inverter Characterization
+#### 2.2.1 - Xschem schematic and SPICE directives for simulation
+
+#### 2.2.2 - 
+
+#### 2.2.3 - CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
+  - ![Characterization Table (PDF)](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
+  - Click on the image below to view graphs from the characterization data.
+  |[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)|
+  |:---:|
+
+
 _________________________________________________________________________________________________________  
 
 ## 3 - Design of a BandGap Reference Circuit
