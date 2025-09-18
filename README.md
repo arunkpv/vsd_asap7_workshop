@@ -29,7 +29,7 @@ ________________________________________________________________________________
 
 ### 2.2 - Inverter Characteristics Using 7nm FinFETs
 Click on the image below to view graphs from the characterization data.
-[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/main/docs/html/cmos_inv_plot.html)
+[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)
 
 ### 2.3 - Module 2 Assignment - 7nm Inverter Characterization
 _________________________________________________________________________________________________________  
