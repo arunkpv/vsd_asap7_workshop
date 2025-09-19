@@ -820,3 +820,13 @@ ________________________________________________________________________________
  - https://github.com/RSMadhuri66/Bandgap-Reference-Circuit-with-SCMB-with-ASAP-7nm-PDK-
  - https://github.com/vsdip/vsdopen2021_bgr
 
+
+
+
+_________________________________________________________________________________________________________  
+
+## Miscellaneous Notes:
+
+1. Interestingly, Ngspice's SPICE engine does not seem to support `.step param`. Instead `alter` or `alterparam` inside a loop. See: [Section 12.14.4.3 in Ngspice Manual](https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#magicparlabel-24363)
+2. It looks like in Ngspice, we can only plot currents through (independent) voltage sources. It is possible to put i(Vx), but not i(Rx),. etc. To workaround this, we can add a 0V source in whatever branch of the circuit we want to plot the current through (say, Vdummy) and put plot i(Vdummy)
+3. [ST AN2386 - Threshold voltage thermal coefficient of the MOSFET](https://www.st.com/resource/en/application_note/an2386-how-to-achieve-the-threshold-voltage-thermal-coefficient-of-the-mosfet-acting-on-design-parameters-stmicroelectronics.pdf)
