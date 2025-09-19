@@ -53,7 +53,7 @@ The asap7 directory in the repo contains the modified files to follow the above 
 
 ### 2.1 - NFET DC Characteristics Using 7nm PDKs
 #### 2.1.1 - Parameter Shmoo with `alter`
-<details> <summary> SPICE File: nfet_char.spice </summary>
+<details> <summary> SPICE Deck: nfet_char.spice </summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/nfet_char.sch
@@ -112,12 +112,14 @@ plot (-dc10.VDS#branch) (-dc11.VDS#branch) (-dc12.VDS#branch) (-dc13.VDS#branch)
 | ![lab1_nfet_char_schematic_alterparam](/docs/images/lab1_nfet_char_schematic_alterparam.png) |
 |:---:|
 
-| ID vs. VDS | ID vs. VGS |
-|:---:|:---:|
-| ![lab1_nfet_char_IdVds_alterparam](/docs/images/lab1_nfet_char_IdVds_alterparam.png) | ![lab1_nfet_char_IdVgs_alterparam](/docs/images/lab1_nfet_char_IdVgs_alterparam.png) |
+| ID vs. VDS |
+|:---:|
+| ![lab1_nfet_char_IdVds_alterparam](/docs/images/lab1_nfet_char_IdVds_alterparam.png) |
+| **ID vs. VGS** |
+| ![lab1_nfet_char_IdVgs_alterparam](/docs/images/lab1_nfet_char_IdVgs_alterparam.png) |
 
 #### 2.1.2 - Nested DC Sweep
-<details> <summary> SPICE File: nfet_char2.spice </summary>
+<details> <summary> SPICE Deck: nfet_char2.spice </summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/nfet_char2.sch
@@ -155,19 +157,366 @@ plot -i(VDS) vs v(D)
 ```
 </details>
 
-| ID vs. VDS | ID vs. VGS |
-|:---:|:---:|
-| ![lab1_nfet_char_IdVds_nested_DCSweep](/docs/images/lab1_nfet_char_IdVds_nested_DCSweep.png) | ![lab1_nfet_char_IdVgs_nested_DCSweep](/docs/images/lab1_nfet_char_IdVgs_nested_DCSweep.png) |
-
+| ID vs. VDS |
+|:---:|
+| ![lab1_nfet_char_IdVds_nested_DCSweep](/docs/images/lab1_nfet_char_IdVds_nested_DCSweep.png) |
+| **ID vs. VGS** |
+| ![lab1_nfet_char_IdVgs_nested_DCSweep](/docs/images/lab1_nfet_char_IdVgs_nested_DCSweep.png) |
 
 
 ### 2.2 - Module 2 Assignment - 7nm Inverter Characterization
 
-#### 2.2.1 - Xschem schematic and SPICE directives for simulation
+#### 2.2.1 - Xschem schematic and SPICE directives for evaluating performance metrics
 
-#### 2.2.2 - 
+| Xschem schematic |
+|:---:|
+| ![lab2_cmos_inv_schematic](/docs/images/lab2_cmos_inv_schematic.png) |
 
-#### 2.2.3 - CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
+<details> <summary> SPICE Deck: inverter_vtc.spice <br> Note: Char Loop hardcoded to only Nfin_P=14, Nfin_N=14 </summary>
+
+```
+** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/inverter_vtc.sch
+**.subckt inverter_vtc
+Vin Vin GND pulse({PULSE_VLO} {PULSE_VHI} 20p 10p 10p 40p 500p 1)
+VDD VDD GND {VDD_V}
+Xpfet1 Vout Vin VDD VDD asap_7nm_pfet l=7e-9 nfin={nfin_pmos}
+Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
+
+**** begin user architecture code
+.include ./asap7/asap7.spice
+
+.param nfin_pmos = 14
+.param nfin_nmos = 14
+.param VDD_V    = 0.7
+.csparam VDD_V  = 'VDD_V'
+.csparam VLOW   = '0.2 * VDD_V'
+.csparam VMID   = '0.5 * VDD_V'
+.csparam VHIGH  = '0.8 * VDD_V'
+
+** Unique voltage offset added = 43.8mV
+**    Sigma{ASCII(arun)}/10 = (97+114+117+110)/10 = 43.8mV
+.param Vuniq = 0.0438
+
+.param PULSE_VLO = '0 + Vuniq'
+.param PULSE_VHI = 'VDD_V + Vuniq'
+
+.temp 27
+
+.control
+    pre_osdi ./asap7/bsimcmg.osdi
+    let nfin_typ    = 14
+
+    let nfin_min    = nfin_typ
+    let nfin_max    = nfin_typ
+    let nfin_p = nfin_typ
+    let nfin_n = nfin_typ
+
+    echo "Nfin_P,Nfin_N,v_th,Id_max,Av_max,vil,vih,vol,voh,NML,NMH,Gm_max,t_rise,t_fall,t_slew,f_slew_Hz,f_slew_GHz,tpHL,tpLH,t_pd,f_pd_Hz,f_pd_GHz,Id_peak_transient,energy_per_cycle,avg_power"  > cmos_inverter.csv
+
+    dowhile nfin_p <= nfin_max
+        let nfin_n = nfin_min
+        alterparam nfin_nmos = $&nfin_n
+        alterparam nfin_pmos = $&nfin_p
+        dowhile nfin_n <= nfin_max
+            echo "--------------------"
+            echo "Nfin_P=$&nfin_p, Nfin_N=$&nfin_n"
+            echo "--------------------"
+
+            ** First run DC
+            reset
+            dc Vin 0 0.7 1m
+            run
+            plot Vout Vin
+
+            *******************
+            * DC measurements
+            *******************
+            * Threshold Voltage (Vth)
+            meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
+
+            * Drain Current (Id)
+            let Id = VDD#branch
+            plot Id
+            meas DC Id_max MIN Id
+
+            * Gain (Av)
+            let gain_Av = abs(deriv(Vout))
+            plot gain_Av
+            meas DC Av_max MAX gain_Av
+
+            * Vil, Vih, Vol, Voh, Noise Margin
+            let dVout_dVin = deriv(Vout)
+            meas DC vil FIND V(Vin) WHEN dVout_dVin=-1 cross=1
+            meas DC voh FIND V(Vout) WHEN dVout_dVin=-1 cross=1
+            meas DC vih FIND V(Vin) WHEN dVout_dVin=-1 cross=2
+            meas DC vol FIND V(Vout) WHEN dVout_dVin=-1 cross=2
+            let NML = vil - vol
+            let NMH = voh - vih
+            print NML
+            print NMH
+
+            * Transconductance, Gm
+            let Gm = real(deriv(Id, Vin))
+            plot Gm
+            meas DC Gm_max MAX Gm
+
+            * Output Resistance, Rout
+            let R_out= deriv(Vout, Id)
+            plot R_out
+
+            shell sh -c "printf '%d,%d,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&nfin_p $&nfin_n $&v_th $&Id_max $&Av_max $&vil $&vih $&vol $&voh $&NML $&NMH $&Gm_max >> cmos_inverter.csv"
+
+            *************************
+            * Transient measurements
+            *************************
+            tran 1e-12 100e-12
+            plot Vin Vout
+
+            * Rise time, Fall time
+            meas TRAN t_rise TRIG v(Vout) VAL=VLOW RISE=1 TARG v(Vout) VAL=VHIGH RISE=1
+            meas TRAN t_fall TRIG v(Vout) VAL=VHIGH FALL=1 TARG v(Vout) VAL=VLOW FALL=1
+            let t_slew      = t_rise + t_fall
+            let t_slew_ps   = t_slew * 1e12
+            let f_slew_Hz   = 1/ t_slew
+            let f_slew_GHz  = f_slew_Hz/ 1e9
+            print t_slew
+            print f_slew_Hz
+
+            ** Alternately,
+            *
+            * meas TRAN t1 WHEN v(Vout)=VLOW RISE=1
+            * meas TRAN t2 WHEN v(Vout)=VHIGH RISE=1
+            * let t_rise=(t2-t1)
+            * print t_rise
+            *
+            * meas TRAN t3 WHEN v(Vout)=VHIGH FALL=1
+            * meas TRAN t4 WHEN v(Vout)=VLOW FALL=1
+            * let t_fall=(t4-t3)
+            * print t_fall
+            *
+
+            * Propagation Delay, Frequency (prop. delay based)
+            meas TRAN tpHL TRIG v(Vin) VAL=VMID RISE=1 TARG v(Vout) VAL=VMID FALL=1
+            meas TRAN tpLH TRIG v(Vin) VAL=VMID FALL=1 TARG v(Vout) VAL=VMID RISE=1
+            let t_pd        = (tpHL + tpLH)/ 2
+            let t_pd_ps     = t_pd * 1e12
+            let f_pd_Hz     = 1/ (2 * t_pd)
+            let f_pd_GHz    = f_pd_Hz/ 1e9
+            print t_pd
+            print f_pd_Hz
+
+            * Id, Power
+            let Id_transient = VDD#branch
+            plot Id_transient
+            meas TRAN Id_peak_transient MIN Id_transient
+            * Integral t1 to t2:
+            *   t1 = start of pulse waveform (=PULSE_TD)
+            *   t2 = end   of pulse waveform (= t1 + [tr+pw+tf])
+            let t1 = 20p
+            let t2 = t1 + (10p+40p+10p)
+            meas TRAN Integral_Id INTEG Id_transient from={t1} to={t2}
+            let energy_per_cycle = abs(Integral_Id * VDD_V)
+            let avg_power = (energy_per_cycle / 60e-12)
+            print energy_per_cycle
+            print avg_power
+
+            shell sh -c "printf ',%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&t_rise $&t_fall $&t_slew $&f_slew_Hz $&f_slew_GHz $&tpHL $&tpLH $&t_pd $&f_pd_Hz $&f_pd_GHz $&Id_peak_transient $&energy_per_cycle $&avg_power >> cmos_inverter.csv"
+            echo "" >> cmos_inverter.csv
+
+            let nfin_n = nfin_n + 1
+            alterparam nfin_nmos = $&nfin_n
+        end
+        let nfin_p = nfin_p + 1
+    end
+
+.endc
+
+**** end user architecture code
+**.ends
+.GLOBAL GND
+.GLOBAL VDD
+.end
+```
+</details>
+
+| Ngspice console output |
+|:---:|
+| ![lab2_cmos_inv_p14_n14_ngspice_log](/docs/images/lab2_cmos_inv_p14_n14_ngspice_log.png) |
+
+| DC Analysis: VTC Curve (Vout vs. Vin) <br>```* Threshold Voltage (Vth)
+meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)``` |
+|:---:|
+| ![lab2_cmos_inv_p14_n14_DC_Vout_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Vout_vs_Vin.png) |
+| **ID vs. Vin** |
+| ![lab2_cmos_inv_p14_n14_DC_Id_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Id_vs_Vin.png) |
+
+#### 2.2.2 - 7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
+<details> <summary> SPICE Deck: inverter_char.spice <br> Notes: Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> Also, plots are commented out </summary>
+
+```
+** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/inverter_char.sch
+**.subckt inverter_char
+Vin Vin GND pulse({PULSE_VLO} {PULSE_VHI} 20p 10p 10p 40p 500p 1)
+VDD VDD GND {VDD_V}
+Xpfet1 Vout Vin VDD VDD asap_7nm_pfet l=7e-9 nfin={nfin_pmos}
+Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
+
+**** begin user architecture code
+.include ./asap7/asap7.spice
+
+.param nfin_pmos = 14
+.param nfin_nmos = 14
+.param VDD_V    = 0.7
+.csparam VDD_V  = 'VDD_V'
+.csparam VLOW   = '0.2 * VDD_V'
+.csparam VMID   = '0.5 * VDD_V'
+.csparam VHIGH  = '0.8 * VDD_V'
+
+** Unique voltage offset added = 43.8mV
+**    Sigma{ASCII(arun)}/10 = (97+114+117+110)/10 = 43.8mV
+.param Vuniq = 0.0438
+
+.param PULSE_VLO = '0 + Vuniq'
+.param PULSE_VHI = 'VDD_V + Vuniq'
+
+.temp 27
+
+.control
+    pre_osdi ./asap7/bsimcmg.osdi
+    let nfin_typ    = 14
+    let nfin_min    = nfin_typ - (nfin_typ/ 2)
+    let nfin_max    = nfin_typ + (nfin_typ/ 2)
+
+    echo "Nfin_P,Nfin_N,v_th,Id_max,Av_max,vil,vih,vol,voh,NML,NMH,Gm_max,t_rise,t_fall,t_slew,f_slew_Hz,f_slew_GHz,tpHL,tpLH,t_pd,f_pd_Hz,f_pd_GHz,Id_peak_transient,energy_per_cycle,avg_power"  > cmos_inverter.csv
+
+    let nfin_p = nfin_min
+
+    dowhile nfin_p <= nfin_max
+        let nfin_n = nfin_min
+        alterparam nfin_pmos = $&nfin_p
+        alterparam nfin_nmos = $&nfin_n
+        dowhile nfin_n <= nfin_max
+            echo "--------------------"
+            echo "Nfin_P=$&nfin_p, Nfin_N=$&nfin_n"
+            echo "--------------------"
+
+            ** First run DC
+            reset
+            dc Vin 0 0.7 1m
+            run
+            *plot Vout Vin
+
+            *******************
+            * DC measurements
+            *******************
+            * Threshold Voltage (Vth)
+            meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
+
+            * Drain Current (Id)
+            let Id = VDD#branch
+            *plot Id
+            meas DC Id_max MIN Id
+
+            * Gain (Av)
+            let gain_Av = abs(deriv(Vout))
+            *plot gain_Av
+            meas DC Av_max MAX gain_Av
+
+            * Vil, Vih, Vol, Voh, Noise Margin
+            let dVout_dVin = deriv(Vout)
+            meas DC vil FIND V(Vin) WHEN dVout_dVin=-1 cross=1
+            meas DC voh FIND V(Vout) WHEN dVout_dVin=-1 cross=1
+            meas DC vih FIND V(Vin) WHEN dVout_dVin=-1 cross=2
+            meas DC vol FIND V(Vout) WHEN dVout_dVin=-1 cross=2
+            let NML = vil - vol
+            let NMH = voh - vih
+            print NML
+            print NMH
+
+            * Transconductance, Gm
+            let Gm = real(deriv(Id, Vin))
+            *plot Gm
+            meas DC Gm_max MAX Gm
+
+            * Output Resistance, Rout
+            let R_out= deriv(Vout, Id)
+            *plot R_out
+
+            shell sh -c "printf '%d,%d,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&nfin_p $&nfin_n $&v_th $&Id_max $&Av_max $&vil $&vih $&vol $&voh $&NML $&NMH $&Gm_max >> cmos_inverter.csv"
+
+            *************************
+            * Transient measurements
+            *************************
+            tran 1e-12 100e-12
+            *plot Vin Vout
+
+            * Rise time, Fall time
+            meas TRAN t_rise TRIG v(Vout) VAL=VLOW RISE=1 TARG v(Vout) VAL=VHIGH RISE=1
+            meas TRAN t_fall TRIG v(Vout) VAL=VHIGH FALL=1 TARG v(Vout) VAL=VLOW FALL=1
+            let t_slew      = t_rise + t_fall
+            let t_slew_ps   = t_slew * 1e12
+            let f_slew_Hz   = 1/ t_slew
+            let f_slew_GHz  = f_slew_Hz/ 1e9
+            print t_slew
+            print f_slew_Hz
+
+            ** Alternately,
+            *
+            * meas TRAN t1 WHEN v(Vout)=VLOW RISE=1
+            * meas TRAN t2 WHEN v(Vout)=VHIGH RISE=1
+            * let t_rise=(t2-t1)
+            * print t_rise
+            *
+            * meas TRAN t3 WHEN v(Vout)=VHIGH FALL=1
+            * meas TRAN t4 WHEN v(Vout)=VLOW FALL=1
+            * let t_fall=(t4-t3)
+            * print t_fall
+            *
+
+            * Propagation Delay, Frequency (prop. delay based)
+            meas TRAN tpHL TRIG v(Vin) VAL=VMID RISE=1 TARG v(Vout) VAL=VMID FALL=1
+            meas TRAN tpLH TRIG v(Vin) VAL=VMID FALL=1 TARG v(Vout) VAL=VMID RISE=1
+            let t_pd        = (tpHL + tpLH)/ 2
+            let t_pd_ps     = t_pd * 1e12
+            let f_pd_Hz     = 1/ (2 * t_pd)
+            let f_pd_GHz    = f_pd_Hz/ 1e9
+            print t_pd
+            print f_pd_Hz
+
+            * Id, Power
+            let Id_transient = VDD#branch
+            *plot Id_transient
+            meas TRAN Id_peak_transient MIN Id_transient
+            * Integral t1 to t2:
+            *   t1 = start of pulse waveform (=PULSE_TD)
+            *   t2 = end   of pulse waveform (= t1 + [tr+pw+tf])
+            let t1 = 20p
+            let t2 = t1 + (10p+40p+10p)
+            meas TRAN Integral_Id INTEG Id_transient from={t1} to={t2}
+            let energy_per_cycle = abs(Integral_Id * VDD_V)
+            let avg_power = (energy_per_cycle / 60e-12)
+            print energy_per_cycle
+            print avg_power
+
+            shell sh -c "printf ',%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&t_rise $&t_fall $&t_slew $&f_slew_Hz $&f_slew_GHz $&tpHL $&tpLH $&t_pd $&f_pd_Hz $&f_pd_GHz $&Id_peak_transient $&energy_per_cycle $&avg_power >> cmos_inverter.csv"
+            echo "" >> cmos_inverter.csv
+
+            let nfin_n = nfin_n + 1
+            alterparam nfin_nmos = $&nfin_n
+        end
+        let nfin_p = nfin_p + 1
+    end
+
+.endc
+
+**** end user architecture code
+**.ends
+.GLOBAL GND
+.GLOBAL VDD
+.end
+```
+</details>
+
   - [Characterization Table PDF](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
   - Click on the image below to view graphs from the characterization data.  
 
