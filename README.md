@@ -25,6 +25,31 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 _________________________________________________________________________________________________________  
 
 ## 2 - Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis
+The way the MOS model and OSDI files were all packaged into the symbol files
+and the subckt wrapper definition resulted in the transistor parameters l=7e-9 and nfin=14 getting hardcoded for both pmos and nmos, even if each instance's values are modified in xschem. This required us to edit the generated netlist manually every time a schematic change was made in xschem.  
+
+Moreover, if there is only 1 instance each of nmos & pmos, since it doesn't cause any issues,
+we may overlook the effect of the hardcoding if there are more instances reulting in wrong sizes for the transistors.  
+
+The recommended way to include OSDI lib is provided in the ngspice manual:
+https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#magicparlabel-21886  
+
+The asap7 directory in the repo contains the modified files to follow the above method to use the OSDI models.  
+
+  - The **asap7** folder needs to be placed in the directory where we are creating the schematics in xschem.
+  - When using this with xschem, make the below changes in xschemrc
+  From terminal:
+  ```
+  gedit ~/.xschem/xschemrc &
+  
+  # Change line no. 111 to:
+  set netlist_dir $env(PWD)
+  
+  # Change line no. 118 to:
+  set local_netlist_dir 0
+  ```
+  - Add the `asap7.spice` file using `.include` SPICE directive
+  - Pre-load the OSDI models in netlist using `pre_osdi` command inside `.control` section
 
 ### 2.1 - NFET Characteristics Using 7nm PDKs
 
