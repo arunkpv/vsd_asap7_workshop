@@ -731,6 +731,7 @@ print VCTAT_Slope
 | ![lab3_bgref_DC_VREF](/docs/images/lab3_bgref_DC_VREF.png) | ![lab3_bgref_DC_d(VREF)_dT](/docs/images/lab3_bgref_DC_d(VREF)_dT.png) |
 
 
+**TRANsient Analysis (VDD = 1V, Temp = 27C)**
 <details> <summary> <b>SPICE Deck for TRANsient Analysis:</b> </summary>
 
 ```
@@ -761,19 +762,19 @@ R3 net5 GND 438 m=1
 .include ./asap7/asap7.spice
 
 .temp 27
-*.ic V(VDD)=0 V(net1)=0 V(net3)=0 V(net6)=0
-.tran 10p 100n uic
+**.ic V(VDD)=0 V(net1)=0 V(net3)=0 V(net6)=0
+.tran 1p 20n uic
 
 .control
 pre_osdi ./asap7/bsimcmg.osdi
 run
 
 let VPTAT = V(R1.1) - V(R1.2)
-plot VPTAT
-plot V(VCTAT)
-plot V(VREF)
+plot VPTAT xlimit 0 80p
+plot V(VCTAT) xlimit 0 80p
+plot V(VREF) xlimit 0 80p
 
-meas tran VREF_Final FIND V(VREF) AT=100n
+meas tran VREF_Final FIND V(VREF) AT=20n
 let VREF_TOLERANCE = 1/100
 let VREF_Final_TOL = (1 - VREF_TOLERANCE) * VREF_Final
 meas tran startup_time WHEN V(VREF)=VREF_Final_TOL RISE=1
@@ -786,6 +787,16 @@ print startup_time
 .GLOBAL GND
 .end
 ```
+
+| Ngspice Console Log |
+|:---|
+| ![lab3_bgref_TRAN_ngspice_console_log](/docs/images/lab3_bgref_TRAN_ngspice_console_log.png) |
+
+| **VREF** | |
+|:---:|:---:|
+| ![lab3_bgref_TRAN_Vref](/docs/images/lab3_bgref_TRAN_Vref.png) | |
+| **VPTAT** | **VCTAT** |
+| ![lab3_bgref_TRAN_VPTAT](/docs/images/lab3_bgref_TRAN_VPTAT.png) | ![lab3_bgref_TRAN_VCTAT](/docs/images/lab3_bgref_TRAN_VCTAT.png) |
 
 _________________________________________________________________________________________________________  
 
