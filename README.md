@@ -53,7 +53,7 @@ The asap7 directory in the repo contains the modified files to follow the above 
 
 ### 2.1 - NFET DC Characteristics Using 7nm PDKs
 #### 2.1.1 - Parameter Shmoo with `alter`
-<details> <summary> SPICE Deck: nfet_char.spice </summary>
+<details> <summary> <b>SPICE Deck:</b> nfet_char.spice </summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/nfet_char.sch
@@ -119,7 +119,7 @@ plot (-dc10.VDS#branch) (-dc11.VDS#branch) (-dc12.VDS#branch) (-dc13.VDS#branch)
 | ![lab1_nfet_char_IdVgs_alterparam](/docs/images/lab1_nfet_char_IdVgs_alterparam.png) |
 
 #### 2.1.2 - Nested DC Sweep
-<details> <summary> SPICE Deck: nfet_char2.spice </summary>
+<details> <summary> <b>SPICE Deck:</b> nfet_char2.spice </summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/nfet_char2.sch
@@ -172,7 +172,7 @@ plot -i(VDS) vs v(D)
 |:---:|
 | ![lab2_cmos_inv_schematic](/docs/images/lab2_cmos_inv_schematic.png) |
 
-<details> <summary> SPICE Deck: inverter_vtc.spice <br> Note: Char Loop hardcoded to only Nfin_P=14, Nfin_N=14 </summary>
+<details> <summary> <b>SPICE Deck:</b> inverter_vtc.spice <br> <u>Note:</u> <br> Char Loop hardcoded to only Nfin_P=14, Nfin_N=14 </summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/inverter_vtc.sch
@@ -354,6 +354,19 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
 ```
 
+**DC Analysis: Vil, Vol, Vol, Voh, Noise Margin**
+
+```
+** Vil, Vih, Vol, Voh, Noise Margin
+let dVout_dVin = deriv(Vout)
+meas DC vil FIND V(Vin) WHEN dVout_dVin=-1 cross=1
+meas DC voh FIND V(Vout) WHEN dVout_dVin=-1 cross=1
+meas DC vih FIND V(Vin) WHEN dVout_dVin=-1 cross=2
+meas DC vol FIND V(Vout) WHEN dVout_dVin=-1 cross=2
+let NML = vil - vol
+let NMH = voh - vih
+```
+
 **DC Analysis: Drain Current (Id)**
 | ![lab2_cmos_inv_p14_n14_DC_Id_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Id_vs_Vin.png) |
 |:---:|
@@ -374,19 +387,6 @@ meas DC Id_max MIN Id
 let gain_Av = abs(deriv(Vout))
 plot gain_Av
 meas DC Av_max MAX gain_Av
-```
-
-**DC Analysis: Vil, Vol, Vol, Voh, Noise Margin**
-
-```
-** Vil, Vih, Vol, Voh, Noise Margin
-let dVout_dVin = deriv(Vout)
-meas DC vil FIND V(Vin) WHEN dVout_dVin=-1 cross=1
-meas DC voh FIND V(Vout) WHEN dVout_dVin=-1 cross=1
-meas DC vih FIND V(Vin) WHEN dVout_dVin=-1 cross=2
-meas DC vol FIND V(Vout) WHEN dVout_dVin=-1 cross=2
-let NML = vil - vol
-let NMH = voh - vih
 ```
 
 **DC Analysis: Transconductance (Gm)**
@@ -428,7 +428,7 @@ let t_slew      = t_rise + t_fall
 let f_slew_Hz   = 1/ t_slew
 ```
 
-**TRANsient Analysis: Rise time, Fall time, Frequency (f_slew)**
+**TRANsient Analysis: Propagation Delay, Frequency (f_pd)**
 ```
 .csparam VMID   = '0.5 * VDD_V'
 
@@ -449,7 +449,7 @@ let Id_transient = VDD#branch
 plot Id_transient
 meas TRAN Id_peak_transient MIN Id_transient
 
-** Energy, Power per cycle
+** Total Energy, Avg. Power per cycle
 * Integral t1 to t2:
 *   t1 = start of pulse waveform (=PULSE_TD)
 *   t2 = end   of pulse waveform (= t1 + [tr+pw+tf])
@@ -462,7 +462,7 @@ let avg_power = (energy_per_cycle / 60e-12)
 
 #### 2.2.3 - 7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
 
-<details> <summary> SPICE Deck: inverter_char.spice <br> Notes: Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> Also, plots are commented out </summary>
+<details> <summary> <b>SPICE Deck:</b> inverter_char.spice <br> <u>Notes:</u> <br> 1) Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> 2) Also, plots are commented out </summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/inverter_char.sch
