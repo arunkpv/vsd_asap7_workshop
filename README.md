@@ -51,7 +51,73 @@ The asap7 directory in the repo contains the modified files to follow the above 
   - Add the `asap7.spice` file using `.include` SPICE directive
   - Pre-load the OSDI models in netlist using `pre_osdi` command inside `.control` section
 
-### 2.1 - NFET Characteristics Using 7nm PDKs
+### 2.1 - NFET DC Characteristics Using 7nm PDKs
+#### 2.1.1 - Parameter Shmoo with `alter`
+<details> <summary> SPICE File: nfet_char.spice </summary>
+
+```
+** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/nfet_char.sch
+**.subckt nfet_char
+VGS G GND 0.8
+VDS D GND 0.8
+Xnfet1 D G GND GND asap_7nm_nfet l=7e-9 nfin=14
+**** begin user architecture code
+* ==========================================
+* NFET DC Characterization
+* ==========================================
+.include ./asap7/asap7.spice
+
+.control
+pre_osdi ./asap7/bsimcmg.osdi
+run
+
+let VDS_Val     = 0
+let VDS_Max     = 0.8
+let VDS_incr_step = 0.1
+
+let VGS_Val     = 0
+let VGS_Max     = 0.8
+let VGS_incr_step = 0.1
+
+** TRANSFER CHARACTERISTICS
+dowhile VDS_Val <= VDS_Max
+    dc VGS 0 0.8 0.01
+    alter VDS VDS_Val
+    run
+    let VDS_Val = VDS_Val + VDS_incr_step
+end
+
+** OUTPUT CHARACTERISTICS
+dowhile VGS_Val <= VGS_Max
+    dc VDS 0 0.8 0.01
+    alter VGS VGS_Val
+    run
+    let VGS_Val = VGS_Val + VGS_incr_step
+end
+
+** ID vs VGS for different VDS
+plot (-dc1.VDS#branch) (-dc2.VDS#branch) (-dc3.VDS#branch) (-dc4.VDS#branch) (-dc5.VDS#branch) (-dc6.VDS#branch) (-dc7.VDS#branch) (-dc8.VDS#branch) (-dc9.VDS#branch)
+
+** ID vs VDS for different VGS
+plot (-dc10.VDS#branch) (-dc11.VDS#branch) (-dc12.VDS#branch) (-dc13.VDS#branch) (-dc14.VDS#branch) (-dc15.VDS#branch) (-dc16.VDS#branch) (-dc17.VDS#branch) (-dc18.VDS#branch)
+.endc
+
+**** end user architecture code
+**.ends
+.GLOBAL GND
+.end
+```
+</details>
+
+| ![lab1_nfet_char_schematic_alterparam](/docs/images/lab1_nfet_char_schematic_alterparam.png) |
+|:---:|
+
+| ID vs. VDS | ID vs. VGS |
+|:---:|:---|
+| ![lab1_nfet_char_IdVds_alterparam](/docs/images/lab1_nfet_char_IdVds_alterparam.png) | ![lab1_nfet_char_IdVgs_alterparam](/docs/images/lab1_nfet_char_IdVgs_alterparam.png) |
+
+
+#### 2.1.2 - Nested DC Sweep
 
 ### 2.2 - Module 2 Assignment - 7nm Inverter Characterization
 
@@ -65,7 +131,7 @@ The asap7 directory in the repo contains the modified files to follow the above 
 
   |[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)|
   |:---:|
-
+  - **Observation needing closer look:** tPHL, tpLH going negative for some Wp/Wn ratios.
 
 _________________________________________________________________________________________________________  
 
@@ -76,5 +142,5 @@ ________________________________________________________________________________
 
 ## Acknowledgements
  - Kunal Ghosh (VSD Corp. Pvt. Ltd.)
- - Soundarya Madhuri Royyuru (https://github.com/RSMadhuri66/Bandgap-Reference-Circuit-with-SCMB-with-ASAP-7nm-PDK-)
+ - https://github.com/RSMadhuri66/Bandgap-Reference-Circuit-with-SCMB-with-ASAP-7nm-PDK-
 
