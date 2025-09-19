@@ -6,7 +6,7 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 
  | Module # | Topic(s) Covered | Status |
  |---|---|---|
- |[**Mod. 1**]() | **Scaling Beyond CMOS: FinFET Devices and Innovations** <br> <ol> <li>[Path To Zetta Scale Computing]()</li> <li>[Introduction To FinFETs]()</li> <li>[FEOL Innovations]()</li> <li>[BEOL Innovations]()</li> </ol> | ![](https://progress-bar.xyz/50/?title=InProgress) <br> **Documentation Pending** |
+ |[**Mod. 1**](#1---scaling-beyond-cmos:-finfet-devices-and-innovations) | **Scaling Beyond CMOS: FinFET Devices and Innovations** <br> <ol> <li>[Path To Zetta Scale Computing]()</li> <li>[Introduction To FinFETs]()</li> <li>[FEOL Innovations]()</li> <li>[BEOL Innovations]()</li> </ol> | ![](https://progress-bar.xyz/50/?title=InProgress) <br> **Documentation Pending** |
  |[**Mod. 2**]() | **Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis** <br> <ol> <li>[First NFET Characteristics Using 7nm PDKs]()</li> <li>[First Inverter Characteristics Using 7nm FinFETs]()</li><li>[Module 2 Assignment - 7nm Inverter Characterization]()</li> </ol> | ![](https://progress-bar.xyz/100/?title=Done) |
  |[**Mod. 3**]() | **Design of a BandGap Reference Circuit** <br> <ol> <li>[Theory: Design of a BGR Circuit]()</li> <li>[Module 3 Assignent - Bandgap Reference Design and Simulation using Xschem]()</li> </ol> | ![](https://progress-bar.xyz/100/?title=InProgress) |
 
@@ -164,7 +164,7 @@ plot -i(VDS) vs v(D)
 | ![lab1_nfet_char_IdVgs_nested_DCSweep](/docs/images/lab1_nfet_char_IdVgs_nested_DCSweep.png) |
 
 
-### 2.2 - Module 2 Assignment - 7nm Inverter Characterization
+### 2.2 - First Inverter Characteristics Using 7nm FinFETs
 
 #### 2.2.1 - Xschem schematic and SPICE directives for evaluating performance metrics
 
@@ -460,7 +460,9 @@ let energy_per_cycle = abs(Integral_Id * VDD_V)
 let avg_power = (energy_per_cycle / 60e-12)
 ```
 
-#### 2.2.3 - 7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
+### 2.3 - Module 2 Assignment - 7nm Inverter Characterization
+
+**7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)**
 
 <details> <summary> <b>SPICE Deck:</b> inverter_char.spice <br> <u>Notes:</u> <br> 1) Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> 2) Also, plots are commented out </summary>
 
