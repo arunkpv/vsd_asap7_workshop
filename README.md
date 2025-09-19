@@ -722,15 +722,12 @@ print VCTAT_Slope
 </details>
 
 **DC Analysis: Temperature Sweep Results**
-| Ngspice Console Log |
+| Ngspice Console Log <br> ![lab3_bgref_DC_ngspice_console_log](/docs/images/lab3_bgref_DC_ngspice_console_log.png) |
 |:---|
-| ![lab3_bgref_DC_ngspice_console_log](/docs/images/lab3_bgref_DC_ngspice_console_log.png) |
 
-| VCTAT | VPTAT |
+| **VCTAT** <br> ![lab3_bgref_DC_VCTAT](/docs/images/lab3_bgref_DC_VCTAT.png) | **VPTAT** <br> ![lab3_bgref_DC_VPTAT](/docs/images/lab3_bgref_DC_VPTAT.png) |
 |:---:|:---:|
-| ![lab3_bgref_DC_VCTAT](/docs/images/lab3_bgref_DC_VCTAT.png) | ![lab3_bgref_DC_VPTAT](/docs/images/lab3_bgref_DC_VPTAT.png) |
-| **VREF** | **d(VREF)/dT** |
-| ![lab3_bgref_DC_VREF](/docs/images/lab3_bgref_DC_VREF.png) | ![lab3_bgref_DC_d(VREF)_dT](/docs/images/lab3_bgref_DC_d(VREF)_dT.png) |
+| **VREF** <br> ![lab3_bgref_DC_VREF](/docs/images/lab3_bgref_DC_VREF.png) | **d(VREF)/dT** <br> ![lab3_bgref_DC_d(VREF)_dT](/docs/images/lab3_bgref_DC_d(VREF)_dT.png) |
 
 
 **TRANsient Analysis (VDD = 1V, Temp = 27C)**
@@ -795,11 +792,9 @@ print startup_time
 |:---|
 | ![lab3_bgref_TRAN_ngspice_console_log](/docs/images/lab3_bgref_TRAN_ngspice_console_log.png) |
 
-| **VREF** | |
+| **VREF** <br> ![lab3_bgref_TRAN_Vref](/docs/images/lab3_bgref_TRAN_Vref.png) | |
 |:---:|:---:|
-| ![lab3_bgref_TRAN_Vref](/docs/images/lab3_bgref_TRAN_Vref.png) | |
-| **VPTAT** | **VCTAT** |
-| ![lab3_bgref_TRAN_VPTAT](/docs/images/lab3_bgref_TRAN_VPTAT.png) | ![lab3_bgref_TRAN_VCTAT](/docs/images/lab3_bgref_TRAN_VCTAT.png) |
+| **VPTAT** <br> ![lab3_bgref_TRAN_VPTAT](/docs/images/lab3_bgref_TRAN_VPTAT.png) | **VCTAT** <br> ![lab3_bgref_TRAN_VCTAT](/docs/images/lab3_bgref_TRAN_VCTAT.png) |
 
 **<u>BGRef Characterization Table</u>**
 
