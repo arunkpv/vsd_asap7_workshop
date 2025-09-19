@@ -464,7 +464,7 @@ let avg_power = (energy_per_cycle / 60e-12)
 
 **7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)**
 
-<details> <summary> <b>SPICE Deck:</b> inverter_char.spice <br> <u>Notes:</u> <br> 1) Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> 2) Also, plots are commented out </summary>
+<details> <summary> <b>SPICE Deck:</b> inverter_char.spice <br> <u>Notes:</u> <br> 1) Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> 2) Also, plots are commented out in below shmoo due to the large set of points. <br>   (VTC, Id, Delay etc. plots for Nfin_P/N=14 were already provided in the preceeding section)</summary>
 
 ```
 ** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/inverter_char.sch
