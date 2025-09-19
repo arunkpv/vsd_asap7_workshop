@@ -630,13 +630,15 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 ```
 </details>
 
+<br>
+
 **Characterization Results:**
   - [Characterization Table PDF](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
   - Click on the image below to view graphs from the characterization data.  
 
   |[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)|
   |:---:|
-  - **Observation needing closer look:** tPHL, tpLH going negative for some Wp/Wn ratios.
+  - _**Observation needing closer look:**_ tPHL, tpLH going negative for some Wp/Wn ratios.
 
 _________________________________________________________________________________________________________  
 
