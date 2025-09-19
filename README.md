@@ -628,6 +628,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 ```
 </details>
 
+**Char. Results:**
   - [Characterization Table PDF](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
   - Click on the image below to view graphs from the characterization data.  
 
