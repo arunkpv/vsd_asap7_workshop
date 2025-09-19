@@ -787,6 +787,7 @@ print startup_time
 .GLOBAL GND
 .end
 ```
+</details>
 
 | Ngspice Console Log |
 |:---|
@@ -798,9 +799,24 @@ print startup_time
 | **VPTAT** | **VCTAT** |
 | ![lab3_bgref_TRAN_VPTAT](/docs/images/lab3_bgref_TRAN_VPTAT.png) | ![lab3_bgref_TRAN_VCTAT](/docs/images/lab3_bgref_TRAN_VCTAT.png) |
 
+**<u>BGRef Characterization Table</u>**
+
+_Note:_
+  - We haven't performed the actual proper design of the BandGap Vref circuit in ASAP7, in the sense that we haven't calculated the bias currents & bias voltages, transistor sizing, resistor values etc.
+  - The reference repo also does not contain any design details/ calculations in this regard
+  - Also, we haven't extracted the required nMOS & pMOS characteristics for the ASAP7 process to be used in the calculations
+  (All we have from the nMOS char done in lab 1 are the nMOS VTH at around 0.18V and Drain current ranges in saturation for a 7nm long, 14 fin Finfet)
+
+  - So what we have done instead (as in the reference repo) is to replace all MOSFETs in the [base circuit diagram](/docs/images/bgr_ckt_diagram_base.png) by n/pMOS with [L=7nm, W=14 fins], and BJTs by diode connected NMOSes.
+    It is still doubtful to me whether a diode-connected NMOS can be used as a replacement for a diode-connected BJT to function as a proper CTAT. Even if it could be used that way, we haven't done the necessary calculations to fix their operating point in saturation (I=V^2) or sub-threshold (I=e^V)
+  Hence, we are left to figure out the operating points, range of resistor values and even the range of allowed VDD values by trial and error!
+  - So without all the above, the characterization data of the BG Reference in the below table is only for representation purposes and not of any practical value.
+
+![lab3_bgref_Char_Table](/docs/images/lab3_bgref_Char_Table.png)
+
 _________________________________________________________________________________________________________  
 
-## Acknowledgements
+## References:
  - Kunal Ghosh (VSD Corp. Pvt. Ltd.)
  - https://github.com/RSMadhuri66/Bandgap-Reference-Circuit-with-SCMB-with-ASAP-7nm-PDK-
  - https://github.com/vsdip/vsdopen2021_bgr
