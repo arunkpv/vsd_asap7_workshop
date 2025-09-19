@@ -113,11 +113,53 @@ plot (-dc10.VDS#branch) (-dc11.VDS#branch) (-dc12.VDS#branch) (-dc13.VDS#branch)
 |:---:|
 
 | ID vs. VDS | ID vs. VGS |
-|:---:|:---|
+|:---:|:---:|
 | ![lab1_nfet_char_IdVds_alterparam](/docs/images/lab1_nfet_char_IdVds_alterparam.png) | ![lab1_nfet_char_IdVgs_alterparam](/docs/images/lab1_nfet_char_IdVgs_alterparam.png) |
 
-
 #### 2.1.2 - Nested DC Sweep
+<details> <summary> SPICE File: nfet_char2.spice </summary>
+
+```
+** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/nfet_char2.sch
+**.subckt nfet_char2
+VGS G GND 0.7
+VDS D GND 0.7
+Xnfet1 D G GND GND asap_7nm_nfet l=7e-9 nfin=56
+**** begin user architecture code
+
+* ==========================================
+* NFET DC Characterization
+* ==========================================
+.include ./asap7/asap7.spice
+
+.control
+pre_osdi ./asap7/bsimcmg.osdi
+run
+* =================================================
+* 1) TRANSFER CHARACTERISTICS (Id vs Vgs for each Vds)
+* First sweep is the inner loop (Vgs), second is the outer loop (Vds)
+dc VGS 0 0.8 0.01 VDS 0 0.8 0.1
+plot -i(VDS) vs v(G)
+
+* =================================================
+* 2) OUTPUT CHARACTERISTICS (Id vs Vds for each Vgs)
+* First sweep is the inner loop (Vds), second is the outer loop (Vgs)
+dc VDS 0 0.8 0.01 VGS 0 0.8 0.1
+plot -i(VDS) vs v(D)
+.endc
+
+**** end user architecture code
+**.ends
+.GLOBAL GND
+.end
+```
+</details>
+
+| ID vs. VDS | ID vs. VGS |
+|:---:|:---:|
+| ![lab1_nfet_char_IdVds_nested_DCSweep](/docs/images/lab1_nfet_char_IdVds_nested_DCSweep.png) | ![lab1_nfet_char_IdVgs_nested_DCSweep](/docs/images/lab1_nfet_char_IdVgs_nested_DCSweep.png) |
+
+
 
 ### 2.2 - Module 2 Assignment - 7nm Inverter Characterization
 
