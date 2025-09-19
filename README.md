@@ -7,8 +7,8 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
  | Module # | Topic(s) Covered | Status |
  |---|---|---|
  |[**Mod. 1**]() | **Scaling Beyond CMOS: FinFET Devices and Innovations** <br> <ol> <li>[Path To Zetta Scale Computing]()</li> <li>[Introduction To FinFETs]()</li> <li>[FEOL Innovations]()</li> <li>[BEOL Innovations]()</li> </ol> | ![](https://progress-bar.xyz/50/?title=InProgress) <br> **Documentation Pending** |
- |[**Mod. 2**]() | **Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis** <br> <ol> <li>[First NFET Characteristics Using 7nm PDKs]()</li> <li>[First Inverter Characteristics Using 7nm FinFETs]()</li><li>[Module 2 Assignment - 7nm Inverter Characterization]()</li> </ol> | ![](https://progress-bar.xyz/50/?title=InProgress) <br> **Documentation Pending** |
- |[**Mod. 3**]() | **Design of a BandGap Reference Circuit** <br> <ol> <li>[Theory: Design of a BGR Circuit]()</li> <li>[Module 3 Assignent - Bandgap Reference Design and Simulation using Xschem]()</li> </ol> | ![](https://progress-bar.xyz/50/?title=InProgress) <br> **Documentation Pending** |
+ |[**Mod. 2**]() | **Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis** <br> <ol> <li>[First NFET Characteristics Using 7nm PDKs]()</li> <li>[First Inverter Characteristics Using 7nm FinFETs]()</li><li>[Module 2 Assignment - 7nm Inverter Characterization]()</li> </ol> | ![](https://progress-bar.xyz/100/?title=Done) |
+ |[**Mod. 3**]() | **Design of a BandGap Reference Circuit** <br> <ol> <li>[Theory: Design of a BGR Circuit]()</li> <li>[Module 3 Assignent - Bandgap Reference Design and Simulation using Xschem]()</li> </ol> | ![](https://progress-bar.xyz/100/?title=InProgress) |
 
 **NOTE: Theory part of the workshop needs to be updated in the documentation**
 ## 1 - Scaling Beyond CMOS: FinFET Devices and Innovations
