@@ -342,7 +342,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 #### 2.2.2: Extracting Inverter Performance Metrics 
 
 | Ngspice console output showing measurements |
-|:---:|
+|:---|
 | ![lab2_cmos_inv_p14_n14_ngspice_log](/docs/images/lab2_cmos_inv_p14_n14_ngspice_log.png) |
 
 **DC Analysis: VTC Curve (Vout vs. Vin)**
@@ -628,7 +628,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 ```
 </details>
 
-**Char. Results:**
+**Characterization Results:**
   - [Characterization Table PDF](./docs/pdf/Module2_Assignment_CMOSInverterChar.pdf)
   - Click on the image below to view graphs from the characterization data.  
 
