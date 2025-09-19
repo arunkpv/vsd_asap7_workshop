@@ -211,7 +211,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
     let nfin_p = nfin_typ
     let nfin_n = nfin_typ
 
-    echo "Nfin_P,Nfin_N,v_th,Id_max,Av_max,vil,vih,vol,voh,NML,NMH,Gm_max,t_rise,t_fall,t_slew,f_slew_Hz,f_slew_GHz,tpHL,tpLH,t_pd,f_pd_Hz,f_pd_GHz,Id_peak_transient,energy_per_cycle,avg_power"  > cmos_inverter.csv
+    echo "Nfin_P,Nfin_N,VM,Id_max,Av_max,vil,vih,vol,voh,NML,NMH,Gm_max,t_rise,t_fall,t_slew,f_slew_Hz,f_slew_GHz,tpHL,tpLH,t_pd,f_pd_Hz,f_pd_GHz,Id_peak_transient,energy_per_cycle,avg_power"  > cmos_inverter.csv
 
     dowhile nfin_p <= nfin_max
         let nfin_n = nfin_min
@@ -231,8 +231,8 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
             *******************
             * DC measurements
             *******************
-            * Threshold Voltage (Vth)
-            meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
+            * Switching Threshold (VM)
+            meas DC VM FIND V(Vin) WHEN V(Vout)=V(Vin)
 
             * Drain Current (Id)
             let Id = VDD#branch
@@ -264,7 +264,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
             let R_out= deriv(Vout, Id)
             plot R_out
 
-            shell sh -c "printf '%d,%d,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&nfin_p $&nfin_n $&v_th $&Id_max $&Av_max $&vil $&vih $&vol $&voh $&NML $&NMH $&Gm_max >> cmos_inverter.csv"
+            shell sh -c "printf '%d,%d,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&nfin_p $&nfin_n $&VM $&Id_max $&Av_max $&vil $&vih $&vol $&voh $&NML $&NMH $&Gm_max >> cmos_inverter.csv"
 
             *************************
             * Transient measurements
@@ -350,8 +350,8 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 |:---:|
 
 ```
-** Threshold Voltage (Vth)
-meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
+** Switching Threshold (VM)
+meas DC VM FIND V(Vin) WHEN V(Vout)=V(Vin)
 ```
 
 **DC Analysis: Vil, Vol, Vol, Voh, Noise Margin**
@@ -498,7 +498,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
     let nfin_min    = nfin_typ - (nfin_typ/ 2)
     let nfin_max    = nfin_typ + (nfin_typ/ 2)
 
-    echo "Nfin_P,Nfin_N,v_th,Id_max,Av_max,vil,vih,vol,voh,NML,NMH,Gm_max,t_rise,t_fall,t_slew,f_slew_Hz,f_slew_GHz,tpHL,tpLH,t_pd,f_pd_Hz,f_pd_GHz,Id_peak_transient,energy_per_cycle,avg_power"  > cmos_inverter.csv
+    echo "Nfin_P,Nfin_N,VM,Id_max,Av_max,vil,vih,vol,voh,NML,NMH,Gm_max,t_rise,t_fall,t_slew,f_slew_Hz,f_slew_GHz,tpHL,tpLH,t_pd,f_pd_Hz,f_pd_GHz,Id_peak_transient,energy_per_cycle,avg_power"  > cmos_inverter.csv
 
     let nfin_p = nfin_min
 
@@ -520,8 +520,8 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
             *******************
             * DC measurements
             *******************
-            * Threshold Voltage (Vth)
-            meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
+            * Switching Threshold (VM)
+            meas DC VM FIND V(Vin) WHEN V(Vout)=V(Vin)
 
             * Drain Current (Id)
             let Id = VDD#branch
@@ -553,7 +553,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
             let R_out= deriv(Vout, Id)
             *plot R_out
 
-            shell sh -c "printf '%d,%d,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&nfin_p $&nfin_n $&v_th $&Id_max $&Av_max $&vil $&vih $&vol $&voh $&NML $&NMH $&Gm_max >> cmos_inverter.csv"
+            shell sh -c "printf '%d,%d,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g' $&nfin_p $&nfin_n $&VM $&Id_max $&Av_max $&vil $&vih $&vol $&voh $&NML $&NMH $&Gm_max >> cmos_inverter.csv"
 
             *************************
             * Transient measurements
