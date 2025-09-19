@@ -641,6 +641,83 @@ ________________________________________________________________________________
 ## 3 - Design of a BandGap Reference Circuit
 ### 3.1 - Theory: Design of a BGR Circuit
 ### 3.2 - Module 3 Assignent - Bandgap Reference Design and Simulation using Xschem
+| BGR Schematic in Xschem showing Runiq |
+|:---|
+| ![lab3_bgref_xschem_schematic](/docs/images/lab3_bgref_xschem_schematic.png) |
+
+<details> <summary> <b>SPICE Deck:</b> bgr_dc.spice <br> </summary>
+
+```
+** sch_path: /home/vsduser/Desktop/asap_7nm_Xschem/bgr_dc.sch
+**.subckt bgr_dc
+Xpfet1 net6 net1 VDD VDD asap_7nm_pfet l=7e-9 nfin=14
+Xpfet2 net1 net1 VDD VDD asap_7nm_pfet l=7e-9 nfin=14
+Xpfet3 VREF net1 VDD VDD asap_7nm_pfet l=7e-9 nfin=14
+Xpfet4 net2 net1 VDD VDD asap_7nm_pfet l=7e-9 nfin=14
+Xpfet5 net3 net1 net2 VDD asap_7nm_pfet l=7e-9 nfin=14
+Xpfet6 net6 net3 net1 VDD asap_7nm_pfet l=7e-9 nfin=14
+Xnfet1 net6 net6 net7 GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet2 net7 net7 GND GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet3 net1 net6 R1.1 GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet4 net3 net3 net4 GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet5 net4 net4 net5 GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet6 R1.2 R1.2 GND GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet7 R1.2 R1.2 GND GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet8 R1.2 R1.2 GND GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet9 R1.2 R1.2 GND GND asap_7nm_nfet l=7e-9 nfin=14
+Xnfet10 VCTAT VCTAT GND GND asap_7nm_nfet l=7e-9 nfin=14
+R1 R1.1 R1.2 33k m=1
+R2 VREF VCTAT 50k m=1
+VDD VDD GND 1
+R3 net5 GND 438 m=1
+
+**** begin user architecture code
+.include ./asap7/asap7.spice
+
+.dc temp -45 150 1
+
+.control
+pre_osdi ./asap7/bsimcmg.osdi
+run
+
+let VPTAT = V(R1.1)-V(R1.2)
+let dVREF_dT = deriv(V(VREF)) * 1e6
+
+plot VPTAT
+plot V(VCTAT)
+plot V(VREF)
+plot dVREF_dT
+
+meas DC VPTAT_Max MAX VPTAT
+meas DC VPTAT_Min MIN VPTAT
+let VPTAT_Slope = (VPTAT_Max - VPTAT_Min)/ 190
+
+meas DC VCTAT_Max MAX V(VCTAT)
+meas DC VCTAT_Min MIN V(VCTAT)
+let VCTAT_Slope = (VCTAT_Min - VCTAT_Max)/ 190
+
+print VPTAT_Slope
+print VCTAT_Slope
+.endc
+
+**** end user architecture code
+**.ends
+.GLOBAL VDD
+.GLOBAL GND
+.end
+```
+</details>
+
+**DC Analysis: Temperature Sweep Results**
+| Ngspice Console Log |
+|:---|
+| ![lab3_bgref_DC_ngspice_console_log](/docs/images/lab3_bgref_DC_ngspice_console_log.png) |
+
+| VCTAT | VPTAT |
+|:---:|:---:|
+| ![lab3_bgref_DC_VCTAT](/docs/images/lab3_bgref_DC_VCTAT.png) | ![lab3_bgref_DC_VPTAT](/docs/images/lab3_bgref_DC_VPTAT.png) |
+| **VREF** | **d(VREF)/dT** |
+| ![lab3_bgref_DC_VREF](/docs/images/lab3_bgref_DC_VREF.png) | ![lab3_bgref_DC_d(VREF)_dT](/docs/images/lab3_bgref_DC_d(VREF)_dT.png) |
 _________________________________________________________________________________________________________  
 
 ## Acknowledgements
