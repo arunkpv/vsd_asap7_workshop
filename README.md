@@ -690,12 +690,16 @@ plot dVREF_dT
 
 meas DC VPTAT_Max MAX VPTAT
 meas DC VPTAT_Min MIN VPTAT
-let VPTAT_Slope = (VPTAT_Max - VPTAT_Min)/ 190
 
 meas DC VCTAT_Max MAX V(VCTAT)
 meas DC VCTAT_Min MIN V(VCTAT)
-let VCTAT_Slope = (VCTAT_Min - VCTAT_Max)/ 190
 
+meas DC VREF_Min MIN V(VREF)
+meas DC VREF_Max MAX V(VREF)
+meas DC T0 WHEN V(VREF)=VREF_Max
+
+let VPTAT_Slope = (VPTAT_Max - VPTAT_Min)/ 195
+let VCTAT_Slope = (VCTAT_Min - VCTAT_Max)/ 195
 print VPTAT_Slope
 print VCTAT_Slope
 .endc
