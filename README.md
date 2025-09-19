@@ -339,18 +339,129 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 ```
 </details>
 
-| Ngspice console output |
+#### 2.2.2: Extracting Inverter Performance Metrics 
+
+| Ngspice console output showing measurements |
 |:---:|
 | ![lab2_cmos_inv_p14_n14_ngspice_log](/docs/images/lab2_cmos_inv_p14_n14_ngspice_log.png) |
 
-| DC Analysis: VTC Curve (Vout vs. Vin) <br>```* Threshold Voltage (Vth)
-meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)``` |
-|:---:|
+**DC Analysis: VTC Curve (Vout vs. Vin)**
 | ![lab2_cmos_inv_p14_n14_DC_Vout_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Vout_vs_Vin.png) |
-| **ID vs. Vin** |
-| ![lab2_cmos_inv_p14_n14_DC_Id_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Id_vs_Vin.png) |
+|:---:|
 
-#### 2.2.2 - 7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
+```
+** Threshold Voltage (Vth)
+meas DC v_th FIND V(Vin) WHEN V(Vout)=V(Vin)
+```
+
+**DC Analysis: Drain Current (Id)**
+| ![lab2_cmos_inv_p14_n14_DC_Id_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Id_vs_Vin.png) |
+|:---:|
+
+```
+** Drain Current (Id)
+let Id = VDD#branch
+plot Id
+meas DC Id_max MIN Id
+```
+
+**DC Analysis: Gain (Av)**
+| ![lab2_cmos_inv_p14_n14_DC_GainAv_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_GainAv_vs_Vin.png) |
+|:---:|
+
+```
+** Gain (Av)
+let gain_Av = abs(deriv(Vout))
+plot gain_Av
+meas DC Av_max MAX gain_Av
+```
+
+**DC Analysis: Vil, Vol, Vol, Voh, Noise Margin**
+
+```
+** Vil, Vih, Vol, Voh, Noise Margin
+let dVout_dVin = deriv(Vout)
+meas DC vil FIND V(Vin) WHEN dVout_dVin=-1 cross=1
+meas DC voh FIND V(Vout) WHEN dVout_dVin=-1 cross=1
+meas DC vih FIND V(Vin) WHEN dVout_dVin=-1 cross=2
+meas DC vol FIND V(Vout) WHEN dVout_dVin=-1 cross=2
+let NML = vil - vol
+let NMH = voh - vih
+```
+
+**DC Analysis: Transconductance (Gm)**
+| ![lab2_cmos_inv_p14_n14_DC_Gm_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Gm_vs_Vin.png) |
+|:---:|
+
+```
+** Transconductance, Gm
+let Gm = real(deriv(Id, Vin))
+plot Gm
+meas DC Gm_max MAX Gm
+```
+
+**DC Analysis: Output Resistance (Rout)**
+| ![lab2_cmos_inv_p14_n14_DC_Rout_vs_Vin](/docs/images/lab2_cmos_inv_p14_n14_DC_Rout_vs_Vin.png) |
+|:---:|
+
+```
+*** Output Resistance, Rout
+let R_out= deriv(Vout, Id)
+plot R_out
+```
+
+**TRANsient Analysis: Vin, Vout waveforms**
+| ![lab2_cmos_inv_p14_n14_TRAN_Vout_Vin_vs_t](/docs/images/lab2_cmos_inv_p14_n14_TRAN_Vout_Vin_vs_t.png) |
+|:---:|
+
+**TRANsient Analysis: Rise time, Fall time, Frequency (f_slew)**
+```
+.param VDD_V    = 0.7
+.csparam VDD_V  = 'VDD_V'
+.csparam VLOW   = '0.2 * VDD_V'
+.csparam VHIGH  = '0.8 * VDD_V'
+
+** Rise time, Fall time, f_slew
+meas TRAN t_rise TRIG v(Vout) VAL=VLOW RISE=1 TARG v(Vout) VAL=VHIGH RISE=1
+meas TRAN t_fall TRIG v(Vout) VAL=VHIGH FALL=1 TARG v(Vout) VAL=VLOW FALL=1
+let t_slew      = t_rise + t_fall
+let f_slew_Hz   = 1/ t_slew
+```
+
+**TRANsient Analysis: Rise time, Fall time, Frequency (f_slew)**
+```
+.csparam VMID   = '0.5 * VDD_V'
+
+** Propagation Delay, Frequency (f_pd)
+meas TRAN tpHL TRIG v(Vin) VAL=VMID RISE=1 TARG v(Vout) VAL=VMID FALL=1
+meas TRAN tpLH TRIG v(Vin) VAL=VMID FALL=1 TARG v(Vout) VAL=VMID RISE=1
+let t_pd        = (tpHL + tpLH)/ 2
+let f_pd_Hz     = 1/ (2 * t_pd)
+```
+
+**TRANsient Analysis: Switching Energy, Avg. Power**
+| ![lab2_cmos_inv_p14_n14_TRAN_Id_vs_t](/docs/images/lab2_cmos_inv_p14_n14_TRAN_Id_vs_t.png) |
+|:---:|
+
+```
+** Trasient Drain current, Id
+let Id_transient = VDD#branch
+plot Id_transient
+meas TRAN Id_peak_transient MIN Id_transient
+
+** Energy, Power per cycle
+* Integral t1 to t2:
+*   t1 = start of pulse waveform (=PULSE_TD)
+*   t2 = end   of pulse waveform (= t1 + [tr+pw+tf])
+let t1 = 20p
+let t2 = t1 + (10p+40p+10p)
+meas TRAN Integral_Id INTEG Id_transient from={t1} to={t2}
+let energy_per_cycle = abs(Integral_Id * VDD_V)
+let avg_power = (energy_per_cycle / 60e-12)
+```
+
+#### 2.2.3 - 7nm FINFET CMOS Inverter Characterization for different Wp, Wn (Lp = Ln = 7nm)
+
 <details> <summary> SPICE Deck: inverter_char.spice <br> Notes: Char Loop for Nfin_P=7-21, Nfin_N=7-21 <br> Also, plots are commented out </summary>
 
 ```
