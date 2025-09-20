@@ -31,6 +31,23 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 
 ### 1.3 FEOL Innovations
 #### 1.3.1 - CMOS Technology Inflection Points
+
+**Dennard Scaling Era (~1 µm to 32 nm)**
+  - ~1 µm – 180 nm: Supply voltage scaling enabled higher integration (Dennard scaling).
+  - 130 nm: Introduction of Cu BEOL (copper interconnects).
+  - 90 nm: Uniaxial strained Si for mobility boost.
+  - 65 nm: eSiGe + low-k dielectrics.
+  - 45 nm: Transition to high-k / metal gate (HKMG) (first HK-first, MG-last).
+  - 32 nm: HKMG + raised source/drain, improving leakage and variability.
+
+**Post-Dennard / New Device Architectures (22 nm onward)**
+  - 22 nm: Shift to FinFETs (Tri-Gate transistors) for leakage control.
+  - 14 nm / 10 nm: Multiple patterning (SADP, SAQP, LELELE) to continue scaling.
+  - 7 nm: EUV lithography adoption.
+  - 5 nm: SiGe FinFET PMOS with EUV for better performance.
+  - 3/2/1.4 nm: Transition to Gate-All-Around (GAA) nanosheet/ nano-wire FETs.
+  - Sub-1 nm (future): Exploration of CFET (stacked devices), 2D materials (e.g., MoS₂), and higher-k dielectrics for ultimate scaling.
+
 #### 1.3.2 - Standard Cell Area Scaling And Variability
 #### 1.3.3 - Parasitics Resistance And Capacitance
 #### 1.3.4 - Device Scaling And Electrical Characteristics
