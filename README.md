@@ -24,8 +24,9 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 
 ### 1.2 - Introduction To FinFETs
 
-| ![Mod1_lecture_03](/docs/images/lecture_screenshots/Mod1_lecture_03.png) | ![Mod1_lecture_04](/docs/images/lecture_screenshots/Mod1_lecture_04.png) |
-|:---:|:---:|
+| ![Mod1_lecture_03](/docs/images/lecture_screenshots/Mod1_lecture_03.png) |
+|:---:|
+|![Mod1_lecture_04](/docs/images/lecture_screenshots/Mod1_lecture_04.png) |
 | ![Mod1_lecture_05](/docs/images/lecture_screenshots/Mod1_lecture_05.png) |
 
 ### 1.3 FEOL Innovations
