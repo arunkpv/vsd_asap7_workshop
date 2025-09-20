@@ -671,6 +671,16 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
   |[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)|
   |:---:|
   - _**Observation needing closer look:**_ tPHL, tpLH going negative for some Wp/Wn ratios.
+  **Update on Reasons for the observation:**
+  1) Vuniq offset voltage added to the Pulse input waveform was the major reason for this.
+  2) VM shifts by such a large value for certain extreme W/L ratios that measuring tpHL/ tpLH with a fixed VMID=(VDD/2) as the crossing reference point can cause negative measurement values.
+  3) Stimulus Pulse Input waveform Rise/ Fall time used.
+  4) Transient analysis time step, dt used.
+  5) CL=0 no-load condition (unrealistic in practicality) resulting in sharp output rise/ fall.
+
+So what is the standard procedure while writing a characterization test bench by which we decide the appropriate:
+ (1) stimulus rise/ fall times, and,
+ (2) the time step for transient analysis ? (Do commercial simulators use Adaptive stepping by default ?)
 
 _________________________________________________________________________________________________________  
 
