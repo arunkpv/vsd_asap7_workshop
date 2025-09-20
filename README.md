@@ -13,7 +13,12 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 **NOTE: Theory part of the workshop needs to be updated in the documentation**
 ## 1 - Scaling Beyond CMOS: FinFET Devices and Innovations
 ### 1.1 - Path To Zetta Scale Computing
+
+| ![Mod1_lecture_01c](/docs/images/lecture_screenshots/Mod1_lecture_01c.png) |
+|:---:|
+
 #### 1.1.1 - CMOS Evolution And Next-Gen Candidates
+
 ### 1.2 - Introduction To FinFETs
 ### 1.3 FEOL Innovations
 #### 1.3.1 - CMOS Technology Inflection Points
