@@ -108,9 +108,12 @@ Cell boundaries were traditionally padded with an additional dummy gate right af
 #### 1.3.2.3 - Contact Over Active Gate (COAG)
 Typically, the area between the end of the nMOS and pMOS devices is used as the gate contact hit location. Self-aligned Contact Over Active Gate (COAG) is a process enhancement technique that eliminates the need to land the contact outside of the active gate, allowing the gate contact to land directly over the active gate, thereby reducing the amount of space the end-to-end (ETE) spacing between devices.
 
-#### 1.3.2.4 - Back-side Power Delivery Network (BS-PDN)
-This method involves delivering power from the backside of the chip using μTSVs, effectively decoupling the power grid from the front-side logic layer. By not consuming space on the standard cell layer for power routing, this technique significantly reduces the area required for the design and can also decrease IR-drop.
+#### 1.3.2.4 - Buried Power Rail (BPR)
+Power rails (VDD, VSS) are buried below the active device layer instead of occupying tracks in the standard cell.  
+Traditionally, power rails run in the first metal layers (M0/M1). By moving them below the device layer, the routing tracks in BEOL are freed for signal routing.  
 
+BPR helps to increase the routing resources in standard cells leading to higher logic density, and reduces the cell height enabling tighter standard-cell libraries. 
+It also helps lower the local IR drop by providing a shorter path for VDD/VSS distribution to the devices.
 
 #### 1.3.3 - Parasitics Resistance And Capacitance
 #### 1.3.4 - Device Scaling And Electrical Characteristics
