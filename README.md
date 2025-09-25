@@ -49,7 +49,29 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 | Sub-1 nm (future) | Exploration of CFET (stacked devices), 2D materials (e.g., MoS₂), and higher-k dielectrics for ultimate scaling. |
 
 
-#### 1.3.2 - Standard Cell Area Scaling And Variability
+#### 1.3.2 - Standard Cell Area Scaling
+
+As process nodes continues to shrink, classical scaling vectors (like gate pitch) become increasingly challenging. Scaling boosters aid traditional scaling vectors through various modifications and enhancements to a process node. They may be part of the process technology flow itself or as part of the standard cell library as part of the design-technology co-optimization (DTCO). By combining scaling boosters with slightly less aggressive classical scaling vectors, a process node can achieve similar transistors density while keeping the process cost in check.
+
+#### 1.3.2.1 - Track Reduction (Fin Depopulation in the context of FinFETs)
+Is a technique for improving the density of the standard cell library by reducing the number of fins per FinFET transistor or the height of the active N or P region. By reducing the height of the active region, the number of tracks is reduced thereby reducing the height of the standard cell and ultimately increasing the transistor density of the chip. In the case of FinFET, fin depopulation results in energy reduction but also performance reduction.
+
+| ![Mod1_lecture_08](/docs/images/lecture_screenshots/Mod1_lecture_08.png) |
+|:---:|
+
+| ![Mod1_lecture_09](/docs/images/lecture_screenshots/Mod1_lecture_09.png) |
+|:---:|
+
+#### 1.3.2.2 - Single Diffusion Break (SDB)
+Cell boundaries were traditionally padded with an additional dummy gate right after the active diffusion regions, at fin ends, for better cell control. As node scaling continued, due to cell height reduction, the portion of the area that makes up the dummy gate grew. Single Dummy Gate (SDG) or Single Diffusion Break (SDB) is a process enhancement technique that eliminates the extra padding around the cell edge when packaging multiple cells, thereby reducing the effective transistor density at the block and macro level.
+
+#### 1.3.2.3 - Contact Over Active Gate (COAG)
+Typically, the area between the end of the nMOS and pMOS devices is used as the gate contact hit location. Self-aligned Contact Over Active Gate (COAG) is a process enhancement technique that eliminates the need to land the contact outside of the active gate, allowing the gate contact to land directly over the active gate, thereby reducing the amount of space the end-to-end (ETE) spacing between devices.
+
+#### 1.3.2.4 - Back-side Power Delivery Network (BS-PDN)
+This method involves delivering power from the backside of the chip using μTSVs, effectively decoupling the power grid from the front-side logic layer. By not consuming space on the standard cell layer for power routing, this technique significantly reduces the area required for the design and can also decrease IR-drop.
+
+
 #### 1.3.3 - Parasitics Resistance And Capacitance
 #### 1.3.4 - Device Scaling And Electrical Characteristics
 #### 1.3.5 - 3D-Structures
@@ -871,4 +893,5 @@ ________________________________________________________________________________
 
 1. Interestingly, Ngspice's SPICE engine does not seem to support `.step param`. Instead `alter` or `alterparam` inside a loop. See: [Section 12.14.4.3 in Ngspice Manual](https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#magicparlabel-24363)
 2. It looks like in Ngspice, we can only plot currents through (independent) voltage sources. It is possible to put i(Vx), but not i(Rx),. etc. To workaround this, we can add a 0V source in whatever branch of the circuit we want to plot the current through (say, Vdummy) and put plot i(Vdummy)
-3. [ST AN2386 - Threshold voltage thermal coefficient of the MOSFET](https://www.st.com/resource/en/application_note/an2386-how-to-achieve-the-threshold-voltage-thermal-coefficient-of-the-mosfet-acting-on-design-parameters-stmicroelectronics.pdf)
+3. [Scaling Booster](https://en.wikichip.org/wiki/scaling_booster)
+4. [ST AN2386 - Threshold voltage thermal coefficient of the MOSFET](https://www.st.com/resource/en/application_note/an2386-how-to-achieve-the-threshold-voltage-thermal-coefficient-of-the-mosfet-acting-on-design-parameters-stmicroelectronics.pdf)
