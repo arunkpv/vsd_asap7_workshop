@@ -34,18 +34,18 @@ FinFETs became necessary because planar MOS devices could no longer suppress sho
 |:---:|
 |![Mod1_lecture_04](/docs/images/lecture_screenshots/Mod1_lecture_04.png) |
 
-**Why FinFets ?**
-1) Electrostatic Integrity and Short-Channel Effects (SCEs)
+#### 1.2.1 - Why FinFets ?
+##### 1) Electrostatic Integrity and Short-Channel Effects (SCEs)
   - In planar MOSFETs, as the gate length $(L_g)$ scaled below ~30 nm, the gate lost control over the channel potential because the depletion regions of the source and drain began to overlap.  
   - This resulted in severe **drain-induced barrier lowering (DIBL)**, **threshold voltage $(V_T)$ roll-off**, and increased **subthreshold slope (SS)** (> 70–80 mV/dec, compared to the ideal 60 mV/dec).  
   - FinFETs, being double-gate or tri-gate structures, increase the gate-to-channel coupling by wrapping the gate around the fin, thereby suppressing SCEs and enabling continued $L_g$ scaling into the sub-20 nm regime.  
 
-2) Improved Subthreshold Swing and Leakage Control
+##### 2) Improved Subthreshold Swing and Leakage Control
   - Planar MOSFETs suffer from poor subthreshold slope due to weak gate coupling.  
   - FinFETs achieve **subthreshold swing closer to the Boltzmann limit (≈60 mV/dec at 300 K)** because the gate controls the channel from multiple sides.  
   - This translates to **significantly reduced off-state current $(I_{off})$**, enabling both high-performance (HP) and low-power (LP) product variants.  
 
-3) Enhanced Drive Current and Effective Channel Width
+##### 3) Enhanced Drive Current and Effective Channel Width
   - The fin geometry introduces a **3D channel** with effective width:  
   $W_{eff} = 2H_{fin} + W_{fin}$
   
@@ -53,15 +53,15 @@ FinFETs became necessary because planar MOS devices could no longer suppress sho
 
   - By increasing fin height or using multiple fins in parallel, designers can boost the on-state drive current $(I_{on})$ **without increasing the footprint**, providing scalability in both performance and density.  
 
-4) Reduced Variability
+##### 4) Reduced Variability
   - Random dopant fluctuations (RDF) in planar devices created large $(V_T)$ variability because planar MOSFETs required heavy channel doping to control SCEs.  
   - FinFETs achieve electrostatic control **primarily through geometry (fin thickness $(T_{fin})$**, which allows for **undoped or lightly doped channels**, reducing RDF and improving device uniformity.  
 
-5) Lower Operating Voltage $(V_{DD})$ and Power Efficiency
+##### 5) Lower Operating Voltage $(V_{DD})$ and Power Efficiency
   - With improved electrostatic control, FinFETs maintain performance at reduced supply voltages, enabling **dynamic power scaling $(P \propto C V^2 f)$**.  
   - Leakage suppression also reduces static power, a major contributor in advanced nodes.  
 
-6) Scalability Beyond Planar CMOS
+##### 6) Scalability Beyond Planar CMOS
   - FinFETs were manufacturable using existing CMOS process extensions (HKMG integration, strain engineering) while providing a **scaling path from 22 nm → 7 nm → 5 nm nodes**.  
   - They act as the evolutionary bridge toward **Gate-All-Around (GAA) nanosheet/nanowire FETs**, where the gate fully wraps around the channel for even stronger control.  
 
