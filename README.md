@@ -94,7 +94,9 @@ FinFETs became necessary because planar MOS devices could no longer suppress sho
 As process nodes continues to shrink, classical scaling vectors (like gate pitch) become increasingly challenging. Scaling boosters aid traditional scaling vectors through various modifications and enhancements to a process node. They may be part of the process technology flow itself or as part of the standard cell library as part of the design-technology co-optimization (DTCO). By combining scaling boosters with slightly less aggressive classical scaling vectors, a process node can achieve similar transistors density while keeping the process cost in check.
 
 #### 1.3.2.1 - Track Reduction (Fin Depopulation in the context of FinFETs)
-Is a technique for improving the density of the standard cell library by reducing the number of fins per FinFET transistor or the height of the active N or P region. By reducing the height of the active region, the number of tracks is reduced thereby reducing the height of the standard cell and ultimately increasing the transistor density of the chip. In the case of FinFET, fin depopulation results in energy reduction but also performance reduction.
+  - Is a technique for improving the density of the standard cell library by reducing the number of fins per FinFET transistor or the height of the active N or P region.  
+  - By reducing the height of the active region, the number of tracks is reduced thereby reducing the height of the standard cell and ultimately increasing the transistor density of the chip.  
+  - In the case of FinFET, fin depopulation results in energy reduction but also performance reduction.
 
 | ![Mod1_lecture_08](/docs/images/lecture_screenshots/Mod1_lecture_08.png) |
 |:---:|
@@ -103,17 +105,18 @@ Is a technique for improving the density of the standard cell library by reducin
 |:---:|
 
 #### 1.3.2.2 - Single Diffusion Break (SDB)
-Cell boundaries were traditionally padded with an additional dummy gate right after the active diffusion regions, at fin ends, for better cell control. As node scaling continued, due to cell height reduction, the portion of the area that makes up the dummy gate grew. Single Dummy Gate (SDG) or Single Diffusion Break (SDB) is a process enhancement technique that eliminates the extra padding around the cell edge when packaging multiple cells, thereby reducing the effective transistor density at the block and macro level.
+  - Cell boundaries were traditionally padded with an additional dummy gate right after the active diffusion regions, at fin ends, for better cell control. As node scaling continued, due to cell height reduction, the portion of the area that makes up the dummy gate grew.  
+  - Single Dummy Gate (SDG) or Single Diffusion Break (SDB) is a process enhancement technique that eliminates the extra padding around the cell edge when packaging multiple cells, thereby reducing the effective transistor density at the block and macro level.
 
 #### 1.3.2.3 - Contact Over Active Gate (COAG)
-Typically, the area between the end of the nMOS and pMOS devices is used as the gate contact hit location. Self-aligned Contact Over Active Gate (COAG) is a process enhancement technique that eliminates the need to land the contact outside of the active gate, allowing the gate contact to land directly over the active gate, thereby reducing the amount of space the end-to-end (ETE) spacing between devices.
+  - Typically, the area between the end of the nMOS and pMOS devices is used as the gate contact hit location.  
+  - Self-aligned Contact Over Active Gate (COAG) is a process enhancement technique that eliminates the need to land the contact outside of the active gate, allowing the gate contact to land directly over the active gate, thereby reducing the amount of space the end-to-end (ETE) spacing between devices.
 
 #### 1.3.2.4 - Buried Power Rail (BPR)
-Power rails (VDD, VSS) are buried below the active device layer instead of occupying tracks in the standard cell.  
-Traditionally, power rails run in the first metal layers (M0/M1). By moving them below the device layer, the routing tracks in BEOL are freed for signal routing.  
-
-BPR helps to increase the routing resources in standard cells leading to higher logic density, and reduces the cell height enabling tighter standard-cell libraries. 
-It also helps lower the local IR drop by providing a shorter path for VDD/VSS distribution to the devices.
+  - Power rails (VDD, VSS) are buried below the active device layer instead of occupying tracks in the standard cell.  
+  - Traditionally, power rails run in the first metal layers (M0/M1). By moving them below the device layer, the routing tracks in BEOL are freed for signal routing.  
+  - BPR helps to increase the routing resources in standard cells leading to higher logic density, and reduces the cell height enabling tighter standard-cell libraries.  
+  It also helps lower the local IR drop by providing a shorter path for VDD/VSS distribution to the devices.
 
 #### 1.3.3 - Parasitics Resistance And Capacitance
 #### 1.3.4 - Device Scaling And Electrical Characteristics
