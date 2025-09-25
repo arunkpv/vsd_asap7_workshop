@@ -19,11 +19,10 @@ This GitHub repository documents the 10-day workshop on [FinFET Circuit Design a
 
 #### 1.1.1 - CMOS Evolution And Next-Gen Candidates
 
-| ![Mod1_lecture_02](/docs/images/lecture_screenshots/Mod1_lecture_02.png) |
-|:---:|
-
 As CMOS technology approaches sub-1 nm nodes, conventional Dennard scaling has essentially ended, and further device scaling must rely on innovations across multiple domains: Patterning, Channel Engineering, Gate Stack Innovation, Interconnect Scaling, Device Architecture, and Design-Technology & System-Technology Co-Optimization.
 
+| ![Mod1_lecture_02](/docs/images/lecture_screenshots/Mod1_lecture_02.png) |
+|:---:|
 
 ### 1.2 - Introduction To FinFETs
 
