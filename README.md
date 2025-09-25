@@ -67,6 +67,7 @@ FinFETs became necessary because planar MOS devices could no longer suppress sho
 
 | ![Mod1_lecture_05](/docs/images/lecture_screenshots/Mod1_lecture_05.png) |
 |:---:|
+| ![Mod1_lecture_10](/docs/images/lecture_screenshots/Mod1_lecture_10.png) |
 
 ### 1.3 FEOL Innovations
 #### 1.3.1 - CMOS Technology Inflection Points
