@@ -118,9 +118,121 @@ As process nodes continues to shrink, classical scaling vectors (like gate pitch
   It also helps lower the local IR drop by providing a shorter path for VDD/VSS distribution to the devices.
 
 #### 1.3.3 - Parasitics Resistance And Capacitance
-#### 1.3.4 - Device Scaling And Electrical Characteristics
+
+As CMOS technology continues to scale beyond the planar MOSFET era into FinFET, Gate-All-Around FETs (GAAFETs), and Complementary FETs (CFETs), device performance is increasingly impacted by **parasitic resistance $(R_{EXT})$** and **parasitic capacitance $(C_{par})$**. These parasitics, once secondary, now play a first-order role in determining drive current, delay, and energy efficiency at advanced nodes.
+
+##### 1.3.3.1 Parasitic Resistance
+
+| ![Mod1_lecture_11](/docs/images/lecture_screenshots/Mod1_lecture_11.png) |
+|:---|
+
+| Planar MOSFETs | FinFETs | GAAFET | CFET |
+|:---|:---|:---|:---|
+| <ul> <li>**Contact width $(W_C)$** is nearly equal to the **Gate width $(W_G)$**: <br>  $\frac{W_C}{W_G} \sim 1$ </li><li>Ratio of external to channel resistance: <br>  $\frac{R_{EXT}}{R_{ch}} < 1$</li><li> Channel resistance dominates; external resistance is relatively minor.</li> </ul> | <ul> <li>Conduction occurs through vertical fins, with current spreading across sidewalls.</li><li>Effective width ratio: <br>  $\frac{W_C}{W_G} \approx \frac{P}{(2H_f + D_f)} \sim \frac{1}{3}$</li><li>Ratio of resistances: <br>  $\frac{R_{EXT}}{R_{ch}} \sim 1$</li><li>External resistance becomes comparable to channel resistance.</li> </ul> | <ul> <li>In nanosheet/nanowire GAAFETs, the contact width per effective gate width decreases further: <br>  $\frac{W_C}{W_G} \sim \frac{1}{6}$</li><li>$\frac{R_{EXT}}{R_{ch}} \sim 3$</li><li>External resistance dominates device performance.</li> </ul> | <ul> <li>CFETs (stacked N- and P-FETs) inherit nanosheet-like geometries with: <br>  $\frac{R_{EXT}}{R_{ch}} \sim 3$</li><li>Parasitic resistance remains a major limiting factor.</li> </ul> |
+
+
+| ![Mod1_lecture_12](/docs/images/lecture_screenshots/Mod1_lecture_12.png) |
+|:---|
+
+| **$\mathbf{R_{EXT}}$ Components** |
+|:---|
+| **$\mathbf{R_{FEOL}}$**: Front-End-Of-Line resistance from the source/drain diffusion region up to the silicide or first contact. <br> <ol> <li>$R_{EPI}$: Epitaxial resistance in the raised source/drain epitaxy.</li> </ol> |
+| **$\mathbf{R_C}$**: Contact resistance between the silicide (or epitaxial region) and the contact metal. <br> Dominant component at advanced nodes. <br> Determined by: <ul> <li> Schottky barrier height (SBH)</li><li>Interface quality</li><li>Doping at the contact interface.</li> </ul> |
+| **$\mathbf{R_{MOL}}$**: Middle-Of-Line resistance - inludes resistance of the local interconnect stack connecting the contact to higher-level metal. <ol> <li>$R_{TS}$: Transistor Spacer resistance - resistance of the narrow constriction where current passes under the spacer, between the gate edge and the raised source/drain.</li><li>$R_{CA-TS}$: contribution of the contact area to transistor spacer path.</li><li>$R_{CA}$: Contact area resistance</li> </ol> |
+| **$\mathbf{R_{BEOL}}$**: Back-End-Of-Line resistance - resistance from the global interconnect stack (Cu/Co/Ru wires, vias, etc.) including $R_{CA-BEOL}$. |
+
+Measurements of the contribution by each component of the parasitic resistances show that:
+  - In NFET: Contact resistance, $R_C$ dominates (~63% initially) which could be improved to within 10%-40%.
+  - In PFET: More evenly distributed between $R_C$ and $R_{EPI}$.
+
+Improvement strategies:
+  - Lower the Schottky Barrier Height (SBH)
+  - High source/drain doping near the contacts
+
+##### 1.3.3.2 Parasitic Capacitance
+
+| ![Mod1_lecture_13](/docs/images/lecture_screenshots/Mod1_lecture_13.png) |
+|:---|
+
+As nodes shrink, the **effective capacitance (C_eff)** becomes dominated by parasitics:
+  - **C_of**: Overlap/fringe capacitance
+  - **C_pc-ca**: Contact-to-channel capacitance
+- Node evolution:
+  - **22 nm**: C_g ~ 56%, parasitics minor.
+  - **7 nm**: Parasitics dominate (~85%), C_g ~ 15%.
+
+Spacer Engineering:
+  - Spacer materials strongly influence parasitic capacitance.
+  - Low-k spacers reduce parasitic capacitance (SiN > SiBCN > SiOCN > SiCO)
+  - Ultimately **Air spacers**
+
+
+#### 1.3.4 - Device Scaling
+As scaling approaches sub-5 nm gate lengths, conventional transistors face fundamental limits.  
+Challenges for sub-5nm gate length scaling:
+  - Direct source-to-drain tunneling increases drastically at ultra-short channels:
+    - Need for high effective mass
+  - Electrostatics degrade due to surface roughness and thickness variations:
+    - Need for uniform atomically thin materials
+  - $C_D$ high relative to $C_{OX}$ --> higher Subthreshold Slope
+    - Need for low in-plane dielectric constant
+
+| ![Mod1_lecture_15](/docs/images/lecture_screenshots/Mod1_lecture_15.png) |
+|:---:|
+
+This forces us to look for new channel materials - where **Transition Metal Dichalcogenides (TMDs)** offer a promising pathway in the sub-5nm regime.
+
+Layered TMD semiconductor materials such as MoS₂, WS₂, MoTe₂, and WSe₂ offer these properties of atomically uniform thickness, higher effective mass and a tunable bandgap
+
+**<U>Scaling Benefits:</U>**
+  - Suppressed source-to-drain tunneling: Dual-gate MoS₂ MOSFETs show up to 100× reduction in tunneling leakage compared to Si, due to larger bandgap and higher m*.
+  - Ultra-short channel feasibility: MoS₂-based devices have demonstrated gate lengths down to 1 nm (using a carbon nanotube gate).
+  - Energy efficiency: Reduced leakage allows large energy savings in ultra-low-power electronics.
+  - Excellent electrostatics: Near-ideal subthreshold slope (~65 mV/dec) and high Ion/Ioff ratios (~10⁶) have been demonstrated.
+
+**<U>Device Demonstrations:</U>**
+| **1 nm MoS₂ transistor** <br> ![Mod1_lecture_17](/docs/images/lecture_screenshots/Mod1_lecture_17.png) | ![Mod1_lecture_18](/docs/images/lecture_screenshots/Mod1_lecture_18.png) |
+|:---:|:---:|
+| **All 2D MOSFET** <br> ![Mod1_lecture_19](/docs/images/lecture_screenshots/Mod1_lecture_19.png) | ![Mod1_lecture_20](/docs/images/lecture_screenshots/Mod1_lecture_20.png) |
+| **TMDs on 3D surfaces** <br> ![Mod1_lecture_22](/docs/images/lecture_screenshots/Mod1_lecture_22.png) | ![Mod1_lecture_23](/docs/images/lecture_screenshots/Mod1_lecture_23.png) |
+
+
 #### 1.3.5 - 3D-Structures
+| ![Mod1_lecture_24](/docs/images/lecture_screenshots/Mod1_lecture_24.png) |
+|:---|
+
 ### 1.4 - BEOL Innovations
+Back-End-Of-Line (BEOL) interconnects — responsible for signal routing and power delivery — have become a critical performance bottleneck. While transistor performance has continued to scale, interconnect resistance and capacitance scaling lags behind, leading to delay, energy, and reliability issues.  
+Innovations in BEOL are therefore essential to sustain system-level scaling.  
+
+| ![Mod1_lecture_27](/docs/images/lecture_screenshots/Mod1_lecture_27.png) |
+|:---|
+
+#### 1.4.1 - Extending Copper Interconnects
+At reduced pitches (≤ 28 nm), Cu resistivity rises due to size effects, scattering, and barrier/liner overheads.
+
+Barrier and via metal optimization through Selective barrier deposition reduces via resistance by up to 50%, allowing Cu interconnects to remain viable down to ~3 nm nodes before a transition to alternative metals is required.
+
+#### 1.4.2 - Transition to Non-Cu Metals
+
+As Cu scaling saturates, alternative metals like Ru, Co, Mo, Rh, Ir are explored.
+
+Advantages:
+  - Improved electromigration (EM) reliability.
+  - Lower resisitivities and low electron scattering at small interconnect dimensions.
+
+
+#### 1.4.3 - Back-Side Power Delivery Network (BS-PDN)
+In traditional front-side PDN (FS-PDN), power and signals share BEOL layers, leading to IR drop and routing congestion.  
+In Back-side PDN (BS-PDN), power delivery vias are routed through the wafer backside
+  - Reduction in IR-drop and power integrity.
+  - As the power delivery layers are separated, this frees up routing resources on the front-side metal layers for signal routing leading to reduced congestion and improved parasitic RC delays and thus performance.
+  - Helps decrease standard cell area by allowing tighter standard cell scaling (from 6-track to 5-track libraries).
+
+| ![Mod1_lecture_30](/docs/images/lecture_screenshots/Mod1_lecture_30.png) |
+|:---|
+
+
 _________________________________________________________________________________________________________  
 
 ## 2 - Lab-to-Simulation: 7nm FinFET Inverter Performance Analysis
