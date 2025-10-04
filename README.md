@@ -878,6 +878,8 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
   5) CL=0 no-load condition (unrealistic in practicality) resulting in sharp output rise/ fall.  
   [Addendum]: This is expected, but I was expecting the MOS parasitic capacitances at the output node be sufficient enough to not cause such -ve values. The extracted parasitics from the layout would give a much better picture.
 
+- [Negative_tp.xlsx](/docs/Negative_tp.xlsx): Contains few experiments for one particular case of negative prop. delay where input slew and simulation timestep are varied to study the effects. 
+
 <details> <summary> It so happens that the above scenario matched perfectly what was explained in the artcile from the following webpage: <br> <a href="https://www.paripath.com/blog/characterization-blog/negative-propagation-delay">"Negative Propatation Delay"</a> </summary>
 
 | ![paripath.com_negative-propagation-delay_snip](/docs/images/paripath.com_negative-propagation-delay_snip.png) |
