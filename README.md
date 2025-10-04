@@ -867,7 +867,7 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
   
   <br>
 
-- **Observation needing closer look:** tPHL, tpLH going negative for certain skewed Wp/Wn ratios.  
+**Observation needing closer look:** tPHL, tpLH going negative for certain skewed Wp/Wn ratios.  
 **<U>[Edit: 2025-10-05] Reasons for the observation: </U>**
   1) Vuniq offset voltage added to the Pulse input waveform is ~~the major reason~~ one of the reasons for this.  
   2) VM shifts by such a large value for certain extreme W/L ratios that measuring tpHL/ tpLH with a fixed VMID=(VDD/2) as the crossing reference point can cause negative measurement values. The highly skewed/ asymmetric pull-up vs. pull-down drive strengths **_is the smoking gun behind this._**  
