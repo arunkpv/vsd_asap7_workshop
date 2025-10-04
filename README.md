@@ -878,10 +878,15 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
   5) CL=0 no-load condition (unrealistic in practicality) resulting in sharp output rise/ fall.  
   [Addendum]: This is expected, but I was expecting the MOS parasitic capacitances at the output node be sufficient enough to not cause such -ve values. The extracted parasitics from the layout would give a much better picture.
 
-It so happens that the above scenario matched perfectly what was explained in the artcile from the following webpage: [https://www.paripath.com/blog/characterization-blog/negative-propagation-delay](https://web.archive.org/web/20250824193140/https://www.paripath.com/blog/characterization-blog/negative-propagation-delay).  
+<details> <summary> It so happens that the above scenario matched perfectly what was explained in the artcile from the following webpage: <br> <a href="https://www.paripath.com/blog/characterization-blog/negative-propagation-delay">"Negative Propatation Delay"</a> </summary>
 
 | ![paripath.com_negative-propagation-delay_snip](/docs/images/paripath.com_negative-propagation-delay_snip.png) |
 |:---:|
+| _**Source:**_ https://www.paripath.com/blog/characterization-blog/negative-propagation-delay|
+
+</details>
+
+<br>
 
 _**So only two of my queries are remaining to be clarified:**_  
 **(1):** What is the standard procedure while writing a characterization test bench by which we decide the appropiate timestep required for a transient analysis ?  
