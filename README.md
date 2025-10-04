@@ -44,7 +44,7 @@ FinFETs became necessary because planar MOS devices could no longer suppress sho
 ##### 2) Improved Subthreshold Swing and Leakage Control
   - Planar MOSFETs suffer from poor subthreshold slope due to weak gate coupling.  
   - FinFETs achieve **subthreshold swing closer to the Boltzmann limit (≈60 mV/dec at 300 K)** because the gate controls the channel from multiple sides.  
-  - This translates to **significantly reduced off-state current $(I_{off})$**, enabling both high-performance (HP) and low-power (LP) product variants.  
+  - This translates to **significantly reduced off-state current $(I_{off})$**.<!--, enabling both high-performance (HP) and low-power (LP) product variants.  -->
 
 ##### 3) Enhanced Drive Current and Effective Channel Width
   - The fin geometry introduces a **3D channel** with effective width:  
@@ -119,7 +119,7 @@ As process nodes continues to shrink, classical scaling vectors (like gate pitch
   - BPR helps to increase the routing resources in standard cells leading to higher logic density, and reduces the cell height enabling tighter standard-cell libraries.  
   It also helps lower the local IR drop by providing a shorter path for VDD/VSS distribution to the devices.
 
-#### 1.3.3 - Parasitics Resistance And Capacitance
+#### 1.3.3 - Parasitic Resistance And Capacitance
 
 As CMOS technology continues to scale beyond the planar MOSFET era into FinFET, Gate-All-Around FETs (GAAFETs), and Complementary FETs (CFETs), device performance is increasingly impacted by **parasitic resistance $(R_{EXT})$** and **parasitic capacitance $(C_{par})$**. These parasitics, once secondary, now play a first-order role in determining drive current, delay, and energy efficiency at advanced nodes.
 
@@ -200,8 +200,21 @@ Layered TMD semiconductor materials such as MoS₂, WS₂, MoTe₂, and WSe₂ o
 
 
 #### 1.3.5 - 3D-Structures
+
+CFET, or Complementary FET, is a future transistor architecture that stacks NMOS and PMOS transistors vertically on top of each other to increase transistor density and reduce chip area. The CFET architecture is an evolution of a Gate-All-Around architecture, where the NFET and PFET are stacked vertically rather than side by side.
+
+Two CFET manufacturing integration schemes have been proposed – one that grows the PFET and NFET together in a **monolithic** manner and the other that grows them **sequentially**. The monolithic approach offers better performance and lower cost. However, extremely high aspect ratio (HAR) etching is needed for monolithic integration. The sequential approach allows more flexibility in NFET and PFET channel materials. However, a very accurate NFET-PFET alignment is needed using sequential integration.
+
 | ![Mod1_lecture_24](/docs/images/lecture_screenshots/Mod1_lecture_24.png) |
 |:---|
+| _**Ref:**_ [Monolithic 3D CMOS Using Layered Semiconductors](https://advanced.onlinelibrary.wiley.com/doi/abs/10.1002/adma.201505113) |
+
+_**Quoting directly from the above paper:**_  
+_"In all CMOS logic circuits, a pair of NMOS & PMOS transistors shares the same gate that accepts an input signal, and NMOS & PMOS transistors always exist in pairs. Taking inverter as an example, NMOS & PMOS transistors can be folded on top of each other along the line of symmetry (M–N) so that each pair of these transistors shares a common gate [Figure (d)]. The source and drain contacts for NMOS and PMOS transistors cannot be always shared and hence should be electrically isolated from each other and connected using metal lines as required. The resulting unit cell for 3D CMOS has an NMOS and a PMOS stacked on top of each other sharing a common gate metal and the source and drain contacts for the two transistors are electrically isolated as shown in Figure (b). Additional layers of logic gates and memory can be stacked over this layer separated with a thick dielectric called the interlayer dielectric to further increase the integration density."_
+
+**References on CFET:**  
+1) [https://www.imec-int.com/en/articles/imec-puts-complementary-fet-cfet-logic-technology-roadmap](https://www.imec-int.com/en/articles/imec-puts-complementary-fet-cfet-logic-technology-roadmap)
+2) [https://newsroom.lamresearch.com/understanding-cfets-transistor-architecture](https://newsroom.lamresearch.com/understanding-cfets-transistor-architecture)
 
 ### 1.4 - BEOL Innovations
 Back-End-Of-Line (BEOL) interconnects — responsible for signal routing and power delivery — have become a critical performance bottleneck. While transistor performance has continued to scale, interconnect resistance and capacitance scaling lags behind, leading to delay, energy, and reliability issues.  
@@ -851,17 +864,32 @@ Xnfet1 Vout Vin GND GND asap_7nm_nfet l=7e-9 nfin={nfin_nmos}
 
   |[![asap7_CMOS_Inverter_char](/docs/images/Asgnmt_cmos_inverter_char_plots.png)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/arunkpv/vsd_asap7_workshop/refs/heads/main/docs/html/cmos_inv_plot.html)|
   |:---:|
-  - _**Observation needing closer look:**_ tPHL, tpLH going negative for some Wp/Wn ratios.
-  **Update on Reasons for the observation:**
-  1) Vuniq offset voltage added to the Pulse input waveform was the major reason for this.
-  2) VM shifts by such a large value for certain extreme W/L ratios that measuring tpHL/ tpLH with a fixed VMID=(VDD/2) as the crossing reference point can cause negative measurement values.
-  3) Stimulus Pulse Input waveform Rise/ Fall time used.
-  4) Transient analysis time step, dt used.
-  5) CL=0 no-load condition (unrealistic in practicality) resulting in sharp output rise/ fall.
+  
+  <br>
 
-So what is the standard procedure while writing a characterization test bench by which we decide the appropriate:
- (1) stimulus rise/ fall times, and,
- (2) the time step for transient analysis ? (Do commercial simulators use Adaptive stepping by default ?)
+- **Observation needing closer look:** tPHL, tpLH going negative for certain skewed Wp/Wn ratios.  
+**<U>[Edit: 2025-10-05] Reasons for the observation: </U>**
+  1) Vuniq offset voltage added to the Pulse input waveform is ~~the major reason~~ one of the reasons for this.  
+  2) VM shifts by such a large value for certain extreme W/L ratios that measuring tpHL/ tpLH with a fixed VMID=(VDD/2) as the crossing reference point can cause negative measurement values. The highly skewed/ asymmetric pull-up vs. pull-down drive strengths **_is the smoking gun behind this._**  
+  3) Stimulus Pulse Input waveform Rise/ Fall time used.  
+  [Addendum]: This would be an independent variable and the characterization has to be done for multiple values of rise/ fall since the input slew rate is dependent on the input node's driver as well as its fan-out (load). Nevertheless, the stimulus input waveform rise/ fall time plays a role in the observation.  
+  4) Transient analysis time step, dt used.  
+  [Addendum]: This would not make the values go negative, but it does affect the measurement accuracy. Ensure that the rising/ falling edge has sufficient number of sample points for accurate interpolation when calculating the time instants of threshold crossing.  
+  5) CL=0 no-load condition (unrealistic in practicality) resulting in sharp output rise/ fall.  
+  [Addendum]: This is expected, but I was expecting the MOS parasitic capacitances at the output node be sufficient enough to not cause such -ve values. The extracted parasitics from the layout would give a much better picture.
+
+It so happens that the above scenario matched perfectly what was explained in the artcile from the following webpage: [https://www.paripath.com/blog/characterization-blog/negative-propagation-delay](https://web.archive.org/web/20250824193140/https://www.paripath.com/blog/characterization-blog/negative-propagation-delay).  
+
+| ![paripath.com_negative-propagation-delay_snip](/docs/images/paripath.com_negative-propagation-delay_snip.png) |
+|:---:|
+
+_**So only two of my queries are remaining to be clarified:**_  
+**(1):** What is the standard procedure while writing a characterization test bench by which we decide the appropiate timestep required for a transient analysis ?  
+Do we do a dummy run first to estimate the ballpark range of the cell's output rise/ fall times and then set the timestep accordingly ?  
+Do commercial simulators use adaptive stepping by default ?  
+
+**(2):** When we have circuits/ cells with highly skewed Pull-up/ Pull-down network drive strengths, what reference voltage should we use as the threshold point for propagation delay measurements ?  
+Is it a good idea to use the measured switching threshold (VM) from DC sim ?  
 
 _________________________________________________________________________________________________________  
 
@@ -1051,6 +1079,6 @@ ________________________________________________________________________________
 ## Miscellaneous Notes:
 
 1. Interestingly, Ngspice's SPICE engine does not seem to support `.step param`. Instead `alter` or `alterparam` inside a loop. See: [Section 12.14.4.3 in Ngspice Manual](https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#magicparlabel-24363)
-2. It looks like in Ngspice, we can only plot currents through (independent) voltage sources. It is possible to put i(Vx), but not i(Rx),. etc. To workaround this, we can add a 0V source in whatever branch of the circuit we want to plot the current through (say, Vdummy) and put plot i(Vdummy)
+2. It looks like in Ngspice, we can only plot currents through (independent) voltage sources. It is possible to put i(Vx), but not i(Rx),. etc. To workaround this, we can add a 0V source (say, Vdummy) in whatever branch of the circuit we want to plot the current through and then: plot i(Vdummy)
 3. [Scaling Booster](https://en.wikichip.org/wiki/scaling_booster)
 4. [ST AN2386 - Threshold voltage thermal coefficient of the MOSFET](https://www.st.com/resource/en/application_note/an2386-how-to-achieve-the-threshold-voltage-thermal-coefficient-of-the-mosfet-acting-on-design-parameters-stmicroelectronics.pdf)
